@@ -30,12 +30,13 @@ export class UserService {
     if (user.password !== changePassDto.oldPassword)
       throw new HttpException('Passwords does not match', HttpStatus.FORBIDDEN);
     user.password = changePassDto.newPassword;
+    user.version += 1;
     return await this.userRepository.save(user);
   }
 
   async deleteUser(id: string) {
     await this.validateUserExist(id);
-    return await this.userRepository.delete(id);
+    await this.userRepository.delete(id);
   }
 
   private async validateUserExist(id: string) {

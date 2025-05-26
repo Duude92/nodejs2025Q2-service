@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { IsNotEmpty, IsUUID } from 'class-validator';
+import { Exclude } from 'class-transformer';
 
 export class User {
   constructor(info: CreateUserDto) {
@@ -8,11 +9,13 @@ export class User {
     this.id = randomUUID();
     this.createdAt = Date.now();
     this.updatedAt = this.createdAt;
+    this.version = 1;
   }
 
   @IsUUID('4', { each: false })
   id: string; // uuid v4
   login: string;
+  @Exclude()
   password: string;
   version: number; // integer number, increments on update
   createdAt: number; // timestamp of creation
