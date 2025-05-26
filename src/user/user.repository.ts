@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 const userStorage: Array<User> = [
   createUser({ login: 'admin', password: 'admin' }),
+  createUser({ login: 'user', password: 'user' }),
 ];
 
 interface Query<T> {

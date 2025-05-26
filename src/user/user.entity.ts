@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { IsUUID } from 'class-validator';
 
 export class User {
   constructor(info: CreateUserDto) {
@@ -9,6 +10,7 @@ export class User {
     this.updatedAt = this.createdAt;
   }
 
+  @IsUUID('4', { each: false })
   id: string; // uuid v4
   login: string;
   password: string;

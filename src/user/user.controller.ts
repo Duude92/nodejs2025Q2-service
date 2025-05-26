@@ -4,6 +4,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 
@@ -17,7 +18,7 @@ export class UserController {
   }
 
   @Get(':id')
-  async getUser(@Param('id') id: string) {
+  async getUser(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     const result = await this.userService.getUser(id);
     if (!result)
       throw new HttpException(
