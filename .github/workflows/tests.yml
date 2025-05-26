@@ -6,7 +6,7 @@ jobs:
   run-tests:
     runs-on: ubuntu-22.04
 
-    name: test - ${{}}
+    name: test - ${{ matrix.test-command.name}}
     strategy:
       fail-fast: false
       matrix:
