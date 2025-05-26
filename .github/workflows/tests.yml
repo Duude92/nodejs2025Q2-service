@@ -25,11 +25,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run service
-        run: npm start &
-
       - name: Setup .env
         run: cp ".env.example" ".env"
+
+      - name: Run service
+        run: npm start &
 
       - name: Run test ${{ matrix.test-command.name }}
         run: npm test -- ${{ matrix.test-command.command }}
