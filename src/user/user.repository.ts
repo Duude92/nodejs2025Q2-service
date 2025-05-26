@@ -22,4 +22,12 @@ export class UserRepository {
         user[Object.keys(query.where)[0]] === Object.values(query.where)[0],
     );
   }
+
+  async find(query?: Query<unknown>): Promise<User[] | undefined> {
+    if (!query) return userStorage;
+    return userStorage.filter(
+      (user) =>
+        user[Object.keys(query.where)[0]] === Object.values(query.where)[0],
+    );
+  }
 }
