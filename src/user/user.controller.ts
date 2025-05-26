@@ -1,4 +1,10 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -12,6 +18,12 @@ export class UserController {
 
   @Get(':id')
   async getUser(@Param('id') id: string) {
-    return await this.userService.getUser(id);
+    const result = await this.userService.getUser(id);
+    if (!result)
+      throw new HttpException(
+        `User with id ${id} not found`,
+        HttpStatus.NOT_FOUND,
+      );
+    return result;
   }
 }
