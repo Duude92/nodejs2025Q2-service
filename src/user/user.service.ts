@@ -31,6 +31,8 @@ export class UserService {
       throw new HttpException('Passwords does not match', HttpStatus.FORBIDDEN);
     user.password = changePassDto.newPassword;
     user.version += 1;
+    user.updatedAt = Date.now();
+
     return await this.userRepository.save(user);
   }
 
