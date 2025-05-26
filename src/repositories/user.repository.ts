@@ -1,4 +1,4 @@
-import { createUser, User } from './user.entity';
+import { createUser, User } from '../user/user.entity';
 import { Injectable } from '@nestjs/common';
 
 const userStorage: Array<User> = [
