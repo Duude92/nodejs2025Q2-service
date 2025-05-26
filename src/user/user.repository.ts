@@ -33,10 +33,17 @@ export class UserRepository {
   }
 
   async save(user: User): Promise<User> {
-    const initialIdx = userStorage.findIndex((user) => user.id === user.id);
+    const initialIdx = userStorage.findIndex((fUser) => fUser.id === user.id);
     if (initialIdx > -1) userStorage.splice(initialIdx, 1);
     user.updatedAt = Date.now();
     userStorage.push(user);
+    return user;
+  }
+
+  async delete(id: string): Promise<User> {
+    const initialIdx = userStorage.findIndex((fUser) => fUser.id === id);
+    const user = userStorage[initialIdx];
+    if (initialIdx > -1) userStorage.splice(initialIdx, 1);
     return user;
   }
 }

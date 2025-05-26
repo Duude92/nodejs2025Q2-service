@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   HttpException,
   HttpStatus,
   Param,
@@ -43,5 +45,11 @@ export class UserController {
     @Body() changePassDto: UpdatePasswordDto,
   ) {
     return await this.userService.updatePassword(id, changePassDto);
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  async delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    await this.userService.deleteUser(id);
   }
 }

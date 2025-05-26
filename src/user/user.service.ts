@@ -26,15 +26,25 @@ export class UserService {
   }
 
   async updatePassword(id: string, changePassDto: UpdatePasswordDto) {
+    const user = await this.validateUserExist(id);
+    if (user.password !== changePassDto.oldPassword)
+      throw new HttpException('Passwords does not match', HttpStatus.FORBIDDEN);
+    user.password = changePassDto.newPassword;
+    return await this.userRepository.save(user);
+  }
+
+  async deleteUser(id: string) {
+    await this.validateUserExist(id);
+    return await this.userRepository.delete(id);
+  }
+
+  private async validateUserExist(id: string) {
     const user = await this.userRepository.findOne({ where: { id: id } });
     if (!user)
       throw new HttpException(
         `User with id ${id} not found`,
         HttpStatus.NOT_FOUND,
       );
-    if (user.password !== changePassDto.oldPassword)
-      throw new HttpException('Passwords does not match', HttpStatus.FORBIDDEN);
-    user.password = changePassDto.newPassword;
-    return await this.userRepository.save(user);
+    return user;
   }
 }
