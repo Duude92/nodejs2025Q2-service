@@ -34,7 +34,8 @@ export class UserRepository {
 
   async save(user: User): Promise<User> {
     const initialIdx = userStorage.findIndex((user) => user.id === user.id);
-    if (initialIdx) userStorage.splice(initialIdx, 1);
+    if (initialIdx > -1) userStorage.splice(initialIdx, 1);
+    user.updatedAt = Date.now();
     userStorage.push(user);
     return user;
   }
