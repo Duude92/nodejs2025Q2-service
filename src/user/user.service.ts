@@ -1,6 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserRepository } from './user.repository';
-import { createUser, CreateUserDto, User } from './user.entity';
+import {
+  createUser,
+  CreateUserDto,
+  UpdatePasswordDto,
+  User,
+} from './user.entity';
 
 @Injectable()
 export class UserService {
@@ -17,6 +22,19 @@ export class UserService {
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = createUser(createUserDto);
 
+    return await this.userRepository.save(user);
+  }
+
+  async updatePassword(id: string, changePassDto: UpdatePasswordDto) {
+    const user = await this.userRepository.findOne({ where: { id: id } });
+    if (!user)
+      throw new HttpException(
+        `User with id ${id} not found`,
+        HttpStatus.NOT_FOUND,
+      );
+    if (user.password !== changePassDto.oldPassword)
+      throw new HttpException('Passwords does not match', HttpStatus.FORBIDDEN);
+    user.password = changePassDto.newPassword;
     return await this.userRepository.save(user);
   }
 }

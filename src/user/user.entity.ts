@@ -26,4 +26,11 @@ export class CreateUserDto {
   password: string;
 }
 
+export class UpdatePasswordDto {
+  @IsNotEmpty()
+  oldPassword: string; // previous password
+  @IsNotEmpty()
+  newPassword: string; // new password
+}
+
 export const createUser = (info: CreateUserDto) => new User(info);

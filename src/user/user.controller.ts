@@ -7,9 +7,10 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './user.entity';
+import { CreateUserDto, UpdatePasswordDto } from './user.entity';
 
 @Controller('user')
 export class UserController {
@@ -34,5 +35,13 @@ export class UserController {
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     return await this.userService.create(createUserDto);
+  }
+
+  @Put(':id')
+  async updatePassword(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Body() changePassDto: UpdatePasswordDto,
+  ) {
+    return await this.userService.updatePassword(id, changePassDto);
   }
 }
