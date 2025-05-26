@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
 export class User {
-  constructor(info: RegistrationInfo) {
+  constructor(info: CreateUserDto) {
     this.login = info.login;
     this.password = info.password;
     this.id = randomUUID();
@@ -17,9 +17,9 @@ export class User {
   updatedAt: number; // timestamp of last update
 }
 
-export interface RegistrationInfo {
+export interface CreateUserDto {
   login: string;
   password: string;
 }
 
-export const createUser = (info: RegistrationInfo) => new User(info);
+export const createUser = (info: CreateUserDto) => new User(info);
