@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { IsUUID } from 'class-validator';
+import { IsNotEmpty, IsUUID } from 'class-validator';
 
 export class User {
   constructor(info: CreateUserDto) {
@@ -19,8 +19,10 @@ export class User {
   updatedAt: number; // timestamp of last update
 }
 
-export interface CreateUserDto {
+export class CreateUserDto {
+  @IsNotEmpty()
   login: string;
+  @IsNotEmpty()
   password: string;
 }
 
