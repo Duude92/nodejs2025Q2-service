@@ -1,12 +1,15 @@
 import {
+  Body,
   Controller,
   Get,
   HttpException,
   HttpStatus,
   Param,
   ParseUUIDPipe,
+  Post,
 } from '@nestjs/common';
 import { UserService } from './user.service';
+import { CreateUserDto } from './user.entity';
 
 @Controller('user')
 export class UserController {
@@ -26,5 +29,10 @@ export class UserController {
         HttpStatus.NOT_FOUND,
       );
     return result;
+  }
+
+  @Post()
+  async create(@Body() createUserDto: CreateUserDto) {
+    return await this.userService.create(createUserDto);
   }
 }

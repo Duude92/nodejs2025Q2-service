@@ -31,4 +31,11 @@ export class UserRepository {
         user[Object.keys(query.where)[0]] === Object.values(query.where)[0],
     );
   }
+
+  async save(user: User): Promise<User> {
+    const initialIdx = userStorage.findIndex((user) => user.id === user.id);
+    if (initialIdx) userStorage.splice(initialIdx, 1);
+    userStorage.push(user);
+    return user;
+  }
 }
