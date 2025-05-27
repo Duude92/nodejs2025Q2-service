@@ -11,6 +11,7 @@ export class Album {
   @IsNotEmpty()
   @IsNumber()
   year: number;
+  @IsUUID()
   artistId: string | null; // refers to Artist
   constructor(data: CreateAlbumDto) {
     this.id = randomUUID();

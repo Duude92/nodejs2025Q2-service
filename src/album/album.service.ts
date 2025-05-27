@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { AlbumRepository } from '../repositories/album.repository';
 
 @Injectable()
 export class AlbumService {
+  constructor(private readonly albumRepository: AlbumRepository) {}
+
   create(createAlbumDto: CreateAlbumDto) {
     return 'This action adds a new album';
   }
 
   findAll() {
-    return `This action returns all album`;
+    return this.albumRepository.find();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} album`;
   }
 
-  update(id: number, updateAlbumDto: UpdateAlbumDto) {
+  update(id: string, updateAlbumDto: UpdateAlbumDto) {
     return `This action updates a #${id} album`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} album`;
   }
 }
