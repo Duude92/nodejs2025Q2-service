@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { IEntity } from './IEntity';
 
 interface Query<T> {
@@ -18,10 +18,16 @@ export class Repository<T extends IEntity> {
     // Probably doesn't needed, will return undefined if found nothing
     // if (!Object.keys(defaultUser).includes(Object.keys(query.where)[0]))
     //   throw new Error('Query should provide existing object field');
-    return this.storage.find(
+    const result = this.storage.find(
       (entity) =>
         entity[Object.keys(query.where)[0]] === Object.values(query.where)[0],
     );
+    if (!result) {
+      throw new NotFoundException(
+        `Item with query ${JSON.stringify(query.where)} not found.`,
+      );
+    }
+    return result;
   }
 
   async find(query?: Query<unknown>): Promise<T[] | undefined> {
@@ -41,6 +47,8 @@ export class Repository<T extends IEntity> {
 
   async delete(id: string): Promise<T> {
     const initialIdx = this.storage.findIndex((fItem) => fItem.id === id);
+    if (initialIdx === -1)
+      throw new NotFoundException(`Item with id ${id} not found.`);
     const entity = this.storage[initialIdx];
     if (initialIdx > -1) this.storage.splice(initialIdx, 1);
     return entity;
