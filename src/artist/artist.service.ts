@@ -51,7 +51,6 @@ export class ArtistService {
       album.artistId = null;
       this.albumRepository.save(album);
     });
-    //TODO: implement same removing code for albums
     return this.artistRepository.delete(id);
   }
 }
