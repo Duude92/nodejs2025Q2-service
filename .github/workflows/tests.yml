@@ -16,6 +16,8 @@ jobs:
             command: test/users.e2e.spec.ts
           - name: tracks main
             command: test/tracks.e2e.spec.ts
+          - name: artists main
+            command: test/artists.e2e.spec.ts
     steps:
       - uses: actions/checkout@v4
 
