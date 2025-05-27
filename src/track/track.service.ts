@@ -1,29 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { TrackRepository } from '../repositories/track.repository';
+import { createTrack } from './entities/track.entity';
 
 @Injectable()
 export class TrackService {
   constructor(private readonly trackRepository: TrackRepository) {}
 
-  create(createTrackDto: CreateTrackDto) {
-    return 'This action adds a new track';
+  async create(createTrackDto: CreateTrackDto) {
+    return await this.trackRepository.save(createTrack(createTrackDto));
   }
 
-  findAll() {
-    return this.trackRepository.find();
+  async findAll() {
+    return await this.trackRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} track`;
+  async findOne(id: string) {
+    return await this.extractAndValidateTrack(id);
   }
 
-  update(id: number, updateTrackDto: UpdateTrackDto) {
-    return `This action updates a #${id} track`;
+  private async extractAndValidateTrack(id: string) {
+    const track = await this.trackRepository.findOne({ where: { id: id } });
+    if (!track)
+      throw new HttpException(
+        `Track with id ${id} not found`,
+        HttpStatus.NOT_FOUND,
+      );
+    return track;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} track`;
+  async update(id: string, updateTrackDto: UpdateTrackDto) {
+    const track = await this.extractAndValidateTrack(id);
+
+    Object.keys(updateTrackDto).forEach((key) => {
+      track[key] = updateTrackDto[key];
+    });
+    return await this.trackRepository.save(track);
+  }
+
+  async remove(id: string) {
+    await this.extractAndValidateTrack(id);
+
+    return await this.trackRepository.delete(id);
   }
 }
