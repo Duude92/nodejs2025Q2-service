@@ -4,12 +4,14 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistRepository } from '../repositories/artist.repository';
 import { createArtist } from './entities/artist.entity';
 import { TrackRepository } from '../repositories/track.repository';
+import { AlbumRepository } from '../repositories/album.repository';
 
 @Injectable()
 export class ArtistService {
   constructor(
     private readonly artistRepository: ArtistRepository,
     private readonly trackRepository: TrackRepository,
+    private readonly albumRepository: AlbumRepository,
   ) {}
 
   create(createArtistDto: CreateArtistDto) {
@@ -44,7 +46,11 @@ export class ArtistService {
       track.artistId = null;
       this.trackRepository.save(track);
     });
-
+    const albums = await this.albumRepository.find({ where: { artistId: id } });
+    albums.forEach((album) => {
+      album.artistId = null;
+      this.albumRepository.save(album);
+    });
     //TODO: implement same removing code for albums
     return this.artistRepository.delete(id);
   }
