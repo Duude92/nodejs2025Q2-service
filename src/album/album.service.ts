@@ -27,9 +27,9 @@ export class AlbumService {
   async update(id: string, updateAlbumDto: UpdateAlbumDto) {
     const album = await this.albumRepository.findOne({ where: { id: id } });
     if (!album) throw new NotFoundException(`Album ${id} not found`);
-    album.name = updateAlbumDto.name;
-    album.year = updateAlbumDto.year;
-    album.artistId = updateAlbumDto.artistId;
+    Object.keys(updateAlbumDto).forEach((key) => {
+      album[key] = updateAlbumDto[key];
+    });
     return await this.albumRepository.save(album);
   }
 

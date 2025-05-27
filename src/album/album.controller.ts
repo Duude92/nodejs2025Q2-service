@@ -5,7 +5,7 @@ import {
   Get,
   HttpCode,
   Patch,
-  Post,
+  Post, Put,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -31,7 +31,7 @@ export class AlbumController {
     return await this.albumService.findOne(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   async update(
     @UUIDParam('id') id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
