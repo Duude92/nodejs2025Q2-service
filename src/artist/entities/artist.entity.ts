@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 
 export class Artist {
   @IsUUID()
-  id: string; // uuid v4
+  readonly id: string; // uuid v4
   @IsNotEmpty()
   @IsString()
   name: string;

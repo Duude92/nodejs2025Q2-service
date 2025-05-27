@@ -1,26 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { ArtistRepository } from '../repositories/artist.repository';
+import { createArtist } from './entities/artist.entity';
 
 @Injectable()
 export class ArtistService {
+  constructor(private readonly artistRepository: ArtistRepository) {}
+
   create(createArtistDto: CreateArtistDto) {
-    return 'This action adds a new artist';
+    const newArtist = createArtist(createArtistDto);
+    return this.artistRepository.save(newArtist);
   }
 
-  findAll() {
-    return `This action returns all artist`;
+  async findAll() {
+    return await this.artistRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} artist`;
+  async findOne(id: string) {
+    return await this.artistRepository.findOne({ where: { id: id } });
   }
 
-  update(id: number, updateArtistDto: UpdateArtistDto) {
-    return `This action updates a #${id} artist`;
+  async update(id: string, updateArtistDto: UpdateArtistDto) {
+    const foundArtist = await this.artistRepository.findOne({
+      where: { id: id },
+    });
+    if (!foundArtist)
+      throw new NotFoundException(`Item with id ${id} not found.`);
+    foundArtist.grammy = updateArtistDto.grammy;
+    foundArtist.name = updateArtistDto.name;
+    await this.artistRepository.save(foundArtist);
+
+    return foundArtist;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} artist`;
+  remove(id: string) {
+    return this.artistRepository.delete(id);
   }
 }
