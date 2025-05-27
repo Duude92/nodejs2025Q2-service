@@ -18,6 +18,8 @@ jobs:
             command: test/tracks.e2e.spec.ts
           - name: artists main
             command: test/artists.e2e.spec.ts
+          - name: albums main
+            command: test/albums.e2e.spec.ts
     steps:
       - uses: actions/checkout@v4
 
