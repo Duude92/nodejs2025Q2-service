@@ -1,7 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import { IsNotEmpty, IsUUID } from 'class-validator';
-import { Exclude } from 'class-transformer';
+import { Exclude, Transform } from 'class-transformer';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity()
 export class User {
   constructor(info: CreateUserDto) {
     this.login = info.login;
@@ -13,12 +15,20 @@ export class User {
   }
 
   @IsUUID('4', { each: false })
+  @PrimaryGeneratedColumn('uuid')
   id: string; // uuid v4
+  @Column()
   login: string;
+  @Column()
   @Exclude()
   password: string;
+  @Column()
   version: number; // integer number, increments on update
+  @Column({ type: 'bigint' })
+  @Transform(({ value }) => Number(value))
   createdAt: number; // timestamp of creation
+  @Column({ type: 'bigint' })
+  @Transform(({ value }) => Number(value))
   updatedAt: number; // timestamp of last update
 }
 
