@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   HttpCode,
-  Patch,
-  Post, Put,
+  Post,
+  Put,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
