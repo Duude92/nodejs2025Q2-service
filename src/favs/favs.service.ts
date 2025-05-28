@@ -3,6 +3,7 @@ import {
   HttpStatus,
   Injectable,
   NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { FavRepository } from '../repositories/fav.repository';
 
@@ -24,7 +25,22 @@ async function validateRouteAndGetFavs(route: string) {
 export class FavsService {
   constructor(private readonly favouriteRepository: FavRepository) {}
 
-  async findAll() {
+  async validateRouteAndGetFavs(route: string) {
+    const favs = (await this.favouriteRepository.find())[0];
+
+    const field = route + 's';
+    if (!(field in favs))
+      throw new HttpException(
+        `Resource ${route} not found`,
+        HttpStatus.NOT_FOUND,
+        {
+          cause: new Error('Not found'),
+        },
+      );
+    return { favs, field };
+  }
+
+  async findAll(): Promise<IFavoritesResponse> {
     // We always should have first one favourites list
     const favs = (await this.favouriteRepository.find())[0];
     if (!favs)
@@ -37,7 +53,7 @@ export class FavsService {
   }
 
   async remove(id: string, route: string) {
-    const { favs, field } = await validateRouteAndGetFavs.call(this, route);
+    const { favs, field } = await this.validateRouteAndGetFavs(route);
     const idx = favs[field].findIndex((fav: string) => fav === id);
     if (idx === -1) throw new NotFoundException();
     favs[field].splice(idx, 1);
@@ -45,7 +61,9 @@ export class FavsService {
   }
 
   async add(id: string, route: string) {
-    const { favs, field } = await validateRouteAndGetFavs.call(this, route);
+    const { favs, field } = await this.validateRouteAndGetFavs(route);
+    const exist = await this.services[field].validateEntityExists(id);
+    if (!exist) throw new UnprocessableEntityException();
     favs[field].push(id);
     return favs[field];
   }
