@@ -1,26 +1,52 @@
-import { Injectable } from '@nestjs/common';
-import { CreateFavDto } from './dto/create-fav.dto';
-import { UpdateFavDto } from './dto/update-fav.dto';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { FavRepository } from '../repositories/fav.repository';
+
+async function validateRouteAndGetFavs(route: string) {
+  const favs = await this.findAll();
+  const field = route + 's';
+  if (!(field in favs))
+    throw new HttpException(
+      `Resource ${route} not found`,
+      HttpStatus.NOT_FOUND,
+      {
+        cause: new Error('Not found'),
+      },
+    );
+  return { favs, field };
+}
 
 @Injectable()
 export class FavsService {
-  create(createFavDto: CreateFavDto) {
-    return 'This action adds a new fav';
+  constructor(private readonly favouriteRepository: FavRepository) {}
+
+  async findAll() {
+    // We always should have first one favourites list
+    const favs = (await this.favouriteRepository.find())[0];
+    if (!favs)
+      throw new HttpException(
+        'Something went wrong',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    // TODO: return entities instead
+    return favs;
   }
 
-  findAll() {
-    return `This action returns all favs`;
+  async remove(id: string, route: string) {
+    const { favs, field } = await validateRouteAndGetFavs.call(this, route);
+    const idx = favs[field].findIndex((fav: string) => fav === id);
+    if (idx === -1) throw new NotFoundException();
+    favs[field].splice(idx, 1);
+    return favs[field];
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} fav`;
-  }
-
-  update(id: number, updateFavDto: UpdateFavDto) {
-    return `This action updates a #${id} fav`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} fav`;
+  async add(id: string, route: string) {
+    const { favs, field } = await validateRouteAndGetFavs.call(this, route);
+    favs[field].push(id);
+    return favs[field];
   }
 }
