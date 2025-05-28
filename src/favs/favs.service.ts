@@ -65,7 +65,6 @@ export class FavsService {
         }
       }
     }
-    // TODO: return entities instead
     return result;
   }
 
