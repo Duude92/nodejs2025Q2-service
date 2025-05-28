@@ -17,6 +17,7 @@ export class FavsController {
   }
 
   @Delete(':route/:id')
+  @HttpCode(204)
   remove(@UUIDParam('id') id: string, @Param('route') route: string) {
     return this.favsService.remove(id, route);
   }
