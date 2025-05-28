@@ -1,17 +1,16 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Param,
+  Controller,
   Delete,
-  ParseUUIDPipe,
+  Get,
   HttpCode,
+  Post,
   Put,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
+import { UUIDParam } from 'src/uuidparam/uuidparam.decorator';
 
 @Controller('track')
 export class TrackController {
@@ -28,13 +27,13 @@ export class TrackController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  async findOne(@UUIDParam('id') id: string) {
     return await this.trackService.findOne(id);
   }
 
   @Put(':id')
   async update(
-    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @UUIDParam('id') id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ) {
     return await this.trackService.update(id, updateTrackDto);
@@ -42,7 +41,7 @@ export class TrackController {
 
   @Delete(':id')
   @HttpCode(204)
-  async remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  async remove(@UUIDParam('id') id: string) {
     await this.trackService.remove(id);
   }
 }

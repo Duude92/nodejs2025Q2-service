@@ -7,14 +7,13 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
-  Param,
-  ParseUUIDPipe,
   Post,
   Put,
   UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdatePasswordDto } from './user.entity';
+import { UUIDParam } from '../uuidparam/uuidparam.decorator';
 
 @Controller('user')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -27,7 +26,7 @@ export class UserController {
   }
 
   @Get(':id')
-  async getUser(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  async getUser(@UUIDParam('id') id: string) {
     const result = await this.userService.getUser(id);
     if (!result)
       throw new HttpException(
@@ -44,7 +43,7 @@ export class UserController {
 
   @Put(':id')
   async updatePassword(
-    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @UUIDParam('id') id: string,
     @Body() changePassDto: UpdatePasswordDto,
   ) {
     return await this.userService.updatePassword(id, changePassDto);
@@ -52,7 +51,7 @@ export class UserController {
 
   @Delete(':id')
   @HttpCode(204)
-  async delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  async delete(@UUIDParam('id') id: string) {
     await this.userService.deleteUser(id);
   }
 }
