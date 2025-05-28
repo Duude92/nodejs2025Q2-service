@@ -21,7 +21,7 @@ jobs:
           - name: albums main
             command: test/albums.e2e.spec.ts
           - name: favourites main
-            command: test/favourites.e2e.spec.ts
+            command: test/favorites.e2e.spec.ts
     steps:
       - uses: actions/checkout@v4
 
