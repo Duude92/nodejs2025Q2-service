@@ -81,6 +81,6 @@ export class FavsService {
     const exist = await this.services[field].validateEntityExists(id);
     if (!exist) throw new UnprocessableEntityException();
     favs[field].push(id);
-    return favs[field];
+    return 'Added successfully';
   }
 }
