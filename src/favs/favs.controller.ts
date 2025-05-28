@@ -1,6 +1,7 @@
-import { Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { FavsService } from './favs.service';
 import { UUIDParam } from '../uuidparam/uuidparam.decorator';
+import { IFavoritesResponse } from './entities/fav.entity';
 
 @Controller('favs')
 export class FavsController {
@@ -12,7 +13,7 @@ export class FavsController {
   }
 
   @Get()
-  findAll() {
+  findAll(): Promise<IFavoritesResponse> {
     return this.favsService.findAll();
   }
 
