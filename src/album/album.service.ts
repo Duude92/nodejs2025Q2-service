@@ -12,6 +12,14 @@ export class AlbumService {
     private readonly trackService: TrackService,
   ) {}
 
+  async validateEntityExists(id: string): Promise<boolean> {
+    try {
+      return !!(await this.findOne(id));
+    } catch (_) {
+      return false;
+    }
+  }
+
   async create(createAlbumDto: CreateAlbumDto) {
     return await this.albumRepository.save(createAlbum(createAlbumDto));
   }

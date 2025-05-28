@@ -8,6 +8,14 @@ import { createTrack } from './entities/track.entity';
 export class TrackService {
   constructor(private readonly trackRepository: TrackRepository) {}
 
+  async validateEntityExists(id: string): Promise<boolean> {
+    try {
+      return !!(await this.findOne(id));
+    } catch (_) {
+      return false;
+    }
+  }
+
   async create(createTrackDto: CreateTrackDto) {
     return await this.trackRepository.save(createTrack(createTrackDto));
   }

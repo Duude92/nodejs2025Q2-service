@@ -19,6 +19,14 @@ export class ArtistService {
     return this.artistRepository.save(newArtist);
   }
 
+  async validateEntityExists(id: string): Promise<boolean> {
+    try {
+      return !!(await this.findOne(id));
+    } catch (_) {
+      return false;
+    }
+  }
+
   async findAll() {
     return await this.artistRepository.find();
   }
