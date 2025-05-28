@@ -1,5 +1,8 @@
 import { IsString, IsUUID } from 'class-validator';
 import { randomUUID } from 'node:crypto';
+import { Artist } from '../../artist/entities/artist.entity';
+import { Album } from '../../album/entities/album.entity';
+import { Track } from '../../track/entities/track.entity';
 
 export class Favorites {
   @IsUUID()
@@ -16,4 +19,10 @@ export class Favorites {
     this.albums = [];
     this.tracks = [];
   }
+}
+
+export interface IFavoritesResponse {
+  artists: Artist[];
+  albums: Album[];
+  tracks: Track[];
 }
