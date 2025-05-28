@@ -39,9 +39,25 @@ export class TrackService {
     return await this.trackRepository.save(track);
   }
 
+  async clearArtist(artistId: string) {
+    const tracks = await this.trackRepository.find({ where: { artistId } });
+    tracks.forEach((track) => {
+      track.artistId = null;
+      this.trackRepository.save(track);
+    });
+  }
+
   async remove(id: string) {
     await this.extractAndValidateTrack(id);
 
     return await this.trackRepository.delete(id);
+  }
+
+  async clearAlbums(id: string) {
+    const tracks = await this.trackRepository.find({ where: { albumId: id } });
+    tracks.forEach((track) => {
+      track.albumId = null;
+      this.trackRepository.save(track);
+    });
   }
 }

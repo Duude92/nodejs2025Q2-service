@@ -3,15 +3,15 @@ import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistRepository } from '../repositories/artist.repository';
 import { createArtist } from './entities/artist.entity';
-import { TrackRepository } from '../repositories/track.repository';
-import { AlbumRepository } from '../repositories/album.repository';
+import { TrackService } from '../track/track.service';
+import { AlbumService } from '../album/album.service';
 
 @Injectable()
 export class ArtistService {
   constructor(
     private readonly artistRepository: ArtistRepository,
-    private readonly trackRepository: TrackRepository,
-    private readonly albumRepository: AlbumRepository,
+    private readonly trackService: TrackService,
+    private readonly albumService: AlbumService,
   ) {}
 
   create(createArtistDto: CreateArtistDto) {
@@ -41,16 +41,8 @@ export class ArtistService {
   }
 
   async remove(id: string) {
-    const tracks = await this.trackRepository.find({ where: { artistId: id } });
-    tracks.forEach((track) => {
-      track.artistId = null;
-      this.trackRepository.save(track);
-    });
-    const albums = await this.albumRepository.find({ where: { artistId: id } });
-    albums.forEach((album) => {
-      album.artistId = null;
-      this.albumRepository.save(album);
-    });
+    await this.trackService.clearArtist(id);
+    await this.albumService.clearArtist(id);
     return this.artistRepository.delete(id);
   }
 }
