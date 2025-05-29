@@ -6,6 +6,7 @@ import {
   Delete,
   Put,
   HttpCode,
+  NotFoundException,
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -27,8 +28,10 @@ export class ArtistController {
   }
 
   @Get(':id')
-  findOne(@UUIDParam('id') id: string) {
-    return this.artistService.findOne(id);
+  async findOne(@UUIDParam('id') id: string) {
+    const artist = await this.artistService.findOne(id);
+    if (!artist) throw new NotFoundException('Artist not found');
+    return artist;
   }
 
   @Put(':id')
