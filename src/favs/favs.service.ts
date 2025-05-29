@@ -64,7 +64,12 @@ export class FavsService {
     for (const key in result) {
       for (const fav of favs[key]) {
         try {
-          result[key].push(await this.services[key].findOne(fav));
+          const item = await this.services[key].findOne(fav);
+          if (!item) {
+            await this.remove(fav, key.substring(0, key.length - 1));
+            continue;
+          }
+          result[key].push(item);
         } catch (_) {
           await this.remove(fav, key.substring(0, key.length - 1));
         }
