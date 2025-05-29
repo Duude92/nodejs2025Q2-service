@@ -83,7 +83,8 @@ export class FavsService {
     const idx = favs[field].findIndex((fav: string) => fav === id);
     if (idx === -1) throw new NotFoundException();
     favs[field].splice(idx, 1);
-    return favs[field];
+    await this.favouriteRepository.save(favs);
+    return 'Deleted successfully';
   }
 
   async add(id: string, route: string) {
