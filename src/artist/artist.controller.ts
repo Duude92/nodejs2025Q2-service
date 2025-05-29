@@ -1,12 +1,12 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
+  Controller,
   Delete,
-  Put,
+  Get,
   HttpCode,
   NotFoundException,
+  Post,
+  Put,
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -44,7 +44,9 @@ export class ArtistController {
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@UUIDParam('id') id: string) {
-    return this.artistService.remove(id);
+  async remove(@UUIDParam('id') id: string) {
+    if (!(await this.artistService.validateEntityExists(id)))
+      throw new NotFoundException('Artist not found');
+    return await this.artistService.remove(id);
   }
 }
