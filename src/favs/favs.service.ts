@@ -32,6 +32,9 @@ export class FavsService {
       tracks: trackService,
       albums: albumService,
     };
+    this.favouriteRepository.find().then((result) => {
+      if (!result[0]) this.favouriteRepository.save(new Favorites());
+    });
   }
 
   async validateRouteAndGetFavs(route: string) {
