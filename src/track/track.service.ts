@@ -67,9 +67,9 @@ export class TrackService {
 
   async clearAlbums(id: string) {
     const tracks = await this.trackRepository.find({ where: { albumId: id } });
-    tracks.forEach((track) => {
+    for (const track of tracks) {
       track.albumId = null;
-      this.trackRepository.save(track);
-    });
+      await this.trackRepository.save(track);
+    }
   }
 }
