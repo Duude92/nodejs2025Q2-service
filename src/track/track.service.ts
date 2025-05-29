@@ -1,12 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { TrackRepository } from '../repositories/track.repository';
-import { createTrack } from './entities/track.entity';
+import { createTrack, Track } from './entities/track.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TrackService {
-  constructor(private readonly trackRepository: TrackRepository) {}
+  constructor(
+    @InjectRepository(Track)
+    private readonly trackRepository: Repository<Track>,
+  ) {}
 
   async validateEntityExists(id: string): Promise<boolean> {
     try {
