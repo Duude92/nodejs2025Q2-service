@@ -53,10 +53,10 @@ export class TrackService {
 
   async clearArtist(artistId: string) {
     const tracks = await this.trackRepository.find({ where: { artistId } });
-    tracks.forEach((track) => {
+    for (const track of tracks) {
       track.artistId = null;
-      this.trackRepository.save(track);
-    });
+      await this.trackRepository.save(track);
+    }
   }
 
   async remove(id: string) {

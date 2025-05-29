@@ -45,10 +45,10 @@ export class AlbumService {
 
   async clearArtist(artistId: string) {
     const albums = await this.albumRepository.find({ where: { artistId } });
-    albums.forEach((album) => {
+    for (const album of albums) {
       album.artistId = null;
-      this.albumRepository.save(album);
-    });
+      await this.albumRepository.save(album);
+    }
   }
 
   async remove(id: string) {
