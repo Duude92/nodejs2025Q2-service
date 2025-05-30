@@ -12,7 +12,7 @@ jobs:
       - name: Extract version from tag
         id: version
         run: |
-          version="${{ github.ref_name }:1}"
+          version="${{ github.ref_name[1:] }}"
           echo "Version is ${version}"
 
       - name: Log in to Docker Hub
