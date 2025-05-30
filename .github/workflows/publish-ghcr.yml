@@ -43,5 +43,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            "${{ vars.DOCKERHUB_USERNAME }}/nodejs2025Q2-service:${{ steps.version.outputs.version }}"
-            "${{ vars.DOCKERHUB_USERNAME }}/nodejs2025Q2-service:latest"
+            "${{ vars.DOCKERHUB_USERNAME }}/nodejs2025q2-service:${{ steps.version.outputs.version }}"
+            "${{ vars.DOCKERHUB_USERNAME }}/nodejs2025q2-service:latest"
