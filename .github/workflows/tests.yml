@@ -6,6 +6,16 @@ jobs:
   run-tests:
     runs-on: ubuntu-22.04
 
+    services:
+      postgres17:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: passwd
+          POSTGRES_DB: rest-db
+        ports:
+          - 5432:5432
+
     name: test - ${{ matrix.test-command.name}}
     strategy:
       fail-fast: false
