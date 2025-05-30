@@ -13,12 +13,12 @@ jobs:
         id: version
         run: |
           fVersion="${{ github.ref_name }}"
-          echo "version=${fVersion:1} >> $GITHUB_OUTPUT"
+          echo "version=${fVersion:1}" >> $GITHUB_OUTPUT
 
       - name: Log in to Docker Hub
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_KEY }}
 
       - name: Checkout
@@ -43,5 +43,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            "${{ secrets.DOCKERHUB_USERNAME }}/nodejs2025Q2-service:${{ steps.version.outputs.version }}"
-            "${{ secrets.DOCKERHUB_USERNAME }}/nodejs2025Q2-service:latest"
+            "${{ vars.DOCKERHUB_USERNAME }}/nodejs2025Q2-service:${{ steps.version.outputs.version }}"
+            "${{ vars.DOCKERHUB_USERNAME }}/nodejs2025Q2-service:latest"
