@@ -12,8 +12,8 @@ jobs:
       - name: Extract version from tag
         id: version
         run: |
-          version="${{ github.ref_name[1:] }}"
-          echo "Version is ${version}"
+          fVersion="${{ github.ref_name }}"
+          echo "version=${fVersion:1} >> $GITHUB_OUTPUT"
 
       - name: Log in to Docker Hub
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
@@ -43,5 +43,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            "${{ secrets.DOCKERHUB_USERNAME }}/nodejs2025Q2-service:${{ version }}"
+            "${{ secrets.DOCKERHUB_USERNAME }}/nodejs2025Q2-service:${{ steps.version.outputs.version }}"
             "${{ secrets.DOCKERHUB_USERNAME }}/nodejs2025Q2-service:latest"
