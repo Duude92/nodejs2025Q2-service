@@ -1,4 +1,4 @@
-name: publish-ghcr.yml
+name: Publish docker image
 on:
   push:
     tags:
