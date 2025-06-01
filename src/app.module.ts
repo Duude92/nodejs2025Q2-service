@@ -5,7 +5,7 @@ import { ArtistModule } from './artist/artist.module';
 import { AlbumModule } from './album/album.module';
 import { FavsModule } from './favs/favs.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DB_CONNECTION } from './appconfig';
+import * as datasource from './datasource';
 
 @Module({
   imports: [
@@ -14,12 +14,7 @@ import { DB_CONNECTION } from './appconfig';
     ArtistModule,
     AlbumModule,
     FavsModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      ...DB_CONNECTION,
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
-    }),
+    TypeOrmModule.forRoot(datasource.default.options),
   ],
 })
 export class AppModule {}
