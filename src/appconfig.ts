@@ -3,7 +3,7 @@ import { config } from 'dotenv';
 
 config();
 
-export const APP_PORT = parseInt(process.env.PORT) || 3000;
+export const APP_PORT = parseInt(process.env.PORT || '') || 4000;
 export const CRYPT_SALT = process.env.CRYPT_SALT;
 export const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 export const JWT_SECRET_REFRESH_KEY = process.env.JWT_SECRET_REFRESH_KEY;
