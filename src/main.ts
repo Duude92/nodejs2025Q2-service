@@ -10,7 +10,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const ddd = parse(await readFile('./doc/api.yaml', 'utf8')) as OpenAPIObject;
-  SwaggerModule.setup('doc', app, ddd);
+  SwaggerModule.setup('doc', app, ddd, {
+    yamlDocumentUrl: 'swagger/yaml',
+    jsonDocumentUrl: 'swagger/json',
+  });
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(APP_PORT);
 }
