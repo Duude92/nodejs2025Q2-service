@@ -24,6 +24,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "typeorm:migration:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -- migration:generate ./migrations/migration -d ./src/datasource.ts"
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
+    "typeorm:migration:generate": "npm run typeorm -- migration:generate ./migrations/migration -d ./src/datasource.ts",
   },
   "dependencies": {
     "@nestjs/common": "^10.4.16",
