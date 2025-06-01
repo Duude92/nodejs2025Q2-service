@@ -46,6 +46,9 @@ jobs:
       - name: Setup .env
         run: cp ".env.example" ".env"
 
+      - name: Run migrations
+        run: npm run typeorm:migration:run
+
       - name: Run service
         run: npm start &
 
