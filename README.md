@@ -23,9 +23,23 @@ npm install
 npm start
 ```
 
+## Running containerized service
+
+```npm run compose:up```
+To run service <br>
+```npm run compose:down```
+To stop services <br>
+```npm run compose:up:dev```
+To run service in dev mode with source directory sync and app rebuild on changes
+
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
+
+## Additional resources
+
+- Docker image is published and can be downloaded publicly via [DockerHub](https://hub.docker.com/r/link12155437/nodejs2025q2-service)
+- Project uses tool for vulnerability scanning, to run scn use: ```npm run docker:vulnerabilities```
 
 ## Testing
 
