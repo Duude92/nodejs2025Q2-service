@@ -29,7 +29,8 @@
     "compose:up": "docker compose up",
     "compose:up:dev": "docker compose -f docker-compose.yml -f docker-compose.dev.yml up --watch",
     "compose:down": "docker compose down",
-    "docker:openhub": "start /max https://hub.docker.com/r/link12155437/nodejs2025q2-service"
+    "docker:openhub": "start /max https://hub.docker.com/r/link12155437/nodejs2025q2-service",
+    "docker:vulnerabilities": "docker run --rm -v /var/lib/containers:/var/lib/containers:ro aquasec/trivy image link12155437/nodejs2025q2-service"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.16",
