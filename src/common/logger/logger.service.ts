@@ -4,7 +4,7 @@ import { EOL } from 'node:os';
 import { styleText } from 'node:util';
 import * as process from 'node:process';
 import { LOGGING } from '../../appconfig';
-import fs from 'node:fs';
+import { createWriteStream } from 'node:fs';
 
 export enum MESSAGE_TYPE {
   NORMAL = 'green',
@@ -22,7 +22,7 @@ export class Logger implements LoggerService {
     this.loggingPipes = new Array<Writable>();
     if (LOGGING.CONSOLE_LOG) this.loggingPipes.push(process.stdout);
     if (!!LOGGING.LOG_FILE && LOGGING.LOG_FILE.length !== 0)
-      this.loggingPipes.push(fs.createWriteStream(LOGGING.LOG_FILE));
+      this.loggingPipes.push(createWriteStream(LOGGING.LOG_FILE));
   }
 
   colorLog(message: any, color: MESSAGE_TYPE, ...optionalParams: any[]) {

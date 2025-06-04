@@ -14,7 +14,7 @@ export const TOKEN_REFRESH_EXPIRE_TIME = process.env.TOKEN_REFRESH_EXPIRE_TIME;
 
 export const LOGGING = {
   CONSOLE_LOG: isTrue(process.env.ENABLE_CONSOLE_LOG) || true,
-  LOG_FILE: process.env.ENABLE_CONSOLE_LOG,
+  LOG_FILE: process.env.LOG_FILE,
   LOG_LEVEL: process.env.LOG_LEVEL || 'info',
 };
 
