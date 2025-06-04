@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
 import { LoginDto } from './dto/signup';
 import { compare } from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -24,6 +24,12 @@ export class AuthService {
   }
 
   async signup(signupDto: LoginDto) {
+    const user = await this.userRepository.findOne({
+      where: {
+        login: signupDto.login,
+      },
+    });
+    if (!!user) throw new ConflictException('Conflict. Login already exists');
     return this.userService.create(signupDto);
   }
 }
