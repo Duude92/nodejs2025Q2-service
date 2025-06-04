@@ -5,6 +5,7 @@ import { ArtistModule } from './artist/artist.module';
 import { AlbumModule } from './album/album.module';
 import { FavsModule } from './favs/favs.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 import * as datasource from './datasource';
 
 @Module({
@@ -14,6 +15,7 @@ import * as datasource from './datasource';
     ArtistModule,
     AlbumModule,
     FavsModule,
+    AuthModule,
     TypeOrmModule.forRoot(datasource.default.options),
   ],
 })
