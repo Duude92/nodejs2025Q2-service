@@ -6,11 +6,10 @@ import { OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { readFile } from 'node:fs/promises';
 import { parse } from 'yaml';
 import { Logger } from './common/logger/logger.service';
-import * as process from 'node:process';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: new Logger([process.stdout]),
+    logger: new Logger(),
   });
 
   const ddd = parse(await readFile('./doc/api.yaml', 'utf8')) as OpenAPIObject;
