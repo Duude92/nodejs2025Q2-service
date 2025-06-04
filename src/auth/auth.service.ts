@@ -9,12 +9,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     private readonly userService: UserService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -22,11 +24,14 @@ export class AuthService {
       where: {
         login: loginDto.login,
       },
-      select: ['password'],
+      select: ['id', 'password'],
     });
 
-    if (await compare(loginDto.password, user.password))
-      return { token: 'toke' };
+    if (await compare(loginDto.password, user.password)) {
+      const payload = { userId: user.id, login: loginDto.login };
+
+      return { token: await this.jwtService.signAsync(payload) };
+    }
     throw new ForbiddenException('Incorrect login or password');
   }
 
