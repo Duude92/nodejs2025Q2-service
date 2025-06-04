@@ -1,0 +1,4 @@
+I know it's bad practice to push 'logs' directory,
+but I believe that less than noone would create logs
+directory by themself (without logs folder service won't start),
+and I don't want to overengineer solution
