@@ -27,7 +27,8 @@
     "typeorm:migration:generate": "npm run typeorm -- migration:generate ./migrations/migration -d ./src/datasource.ts",
     "typeorm:migration:run": "npm run typeorm -- migration:run -d ./src/datasource.ts",
     "compose:up": "docker compose up",
-    "compose:down": "docker compose down"
+    "compose:down": "docker compose down",
+    "docker:openhub": "start /max https://hub.docker.com/r/link12155437/nodejs2025q2-service"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.16",
