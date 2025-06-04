@@ -1,4 +1,4 @@
-import { Album, createAlbum } from '../album/entities/album.entity';
+import { Album, createAlbum } from '../../album/entities/album.entity';
 import { Repository } from './repository';
 import { Injectable } from '@nestjs/common';
 
