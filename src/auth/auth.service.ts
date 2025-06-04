@@ -4,11 +4,13 @@ import { compare } from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    private readonly userService: UserService,
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -22,6 +24,6 @@ export class AuthService {
   }
 
   async signup(signupDto: LoginDto) {
-    return Promise.resolve(undefined);
+    return this.userService.create(signupDto);
   }
 }
