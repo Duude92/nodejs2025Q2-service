@@ -1,7 +1,8 @@
-import { Injectable, LoggerService, LogLevel } from '@nestjs/common';
+import { Injectable, LoggerService, LogLevel, Scope } from '@nestjs/common';
 import { Writable } from 'node:stream';
 import { EOL } from 'node:os';
 import { styleText } from 'node:util';
+import * as process from 'node:process';
 import { LOGGING } from '../../appconfig';
 import fs from 'node:fs';
 
@@ -13,7 +14,7 @@ export enum MESSAGE_TYPE {
   FATAL = 'redBright',
 }
 
-@Injectable()
+@Injectable({ scope: Scope.TRANSIENT })
 export class Logger implements LoggerService {
   private readonly loggingPipes: Writable[];
 
