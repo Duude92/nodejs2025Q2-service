@@ -11,7 +11,7 @@ import {
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { UUIDParam } from '../uuidparam/uuidparam.decorator';
+import { UUIDParam } from '../common/uuidparam/uuidparam.decorator';
 
 @Controller('album')
 export class AlbumController {

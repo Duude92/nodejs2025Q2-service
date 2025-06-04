@@ -1,4 +1,4 @@
-import { createTrack, Track } from '../track/entities/track.entity';
+import { createTrack, Track } from '../../track/entities/track.entity';
 import { Injectable } from '@nestjs/common';
 import { Repository } from './repository';
 
