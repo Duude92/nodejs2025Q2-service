@@ -1,4 +1,8 @@
-import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { LoginDto } from './dto/signup';
 import { compare } from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,7 +24,10 @@ export class AuthService {
       },
       select: ['password'],
     });
-    return await compare(loginDto.password, user.password);
+
+    if (await compare(loginDto.password, user.password))
+      return { token: 'toke' };
+    throw new ForbiddenException('Incorrect login or password');
   }
 
   async signup(signupDto: LoginDto) {
@@ -30,6 +37,6 @@ export class AuthService {
       },
     });
     if (!!user) throw new ConflictException('Conflict. Login already exists');
-    return this.userService.create(signupDto);
+    return (await this.userService.create(signupDto)) && 'Successful signup';
   }
 }
