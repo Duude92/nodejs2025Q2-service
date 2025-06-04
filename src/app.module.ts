@@ -14,6 +14,7 @@ import * as datasource from './datasource';
     ArtistModule,
     AlbumModule,
     FavsModule,
+    AuthModule,
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
         ...datasource.default.options,
