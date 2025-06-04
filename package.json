@@ -25,7 +25,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
     "typeorm:migration:generate": "npm run typeorm -- migration:generate ./migrations/migration -d ./src/datasource.ts",
-    "typeorm:migration:run": "npm run typeorm -- migration:run -d ./src/datasource.ts"
+    "typeorm:migration:run": "npm run typeorm -- migration:run -d ./src/datasource.ts",
+    "compose:up": "docker compose up",
+    "compose:down": "docker compose down"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.16",
