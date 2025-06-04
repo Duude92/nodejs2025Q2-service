@@ -23,15 +23,15 @@ jobs:
         node-version: [ 22.x ]
         test-command:
           - name: users main
-            command: test/users.e2e.spec.ts
+            command: auth/users.e2e.spec.ts
           - name: tracks main
-            command: test/tracks.e2e.spec.ts
+            command: auth/tracks.e2e.spec.ts
           - name: artists main
-            command: test/artists.e2e.spec.ts
+            command: auth/artists.e2e.spec.ts
           - name: albums main
-            command: test/albums.e2e.spec.ts
+            command: auth/albums.e2e.spec.ts
           - name: favourites main
-            command: test/favorites.e2e.spec.ts
+            command: auth/favorites.e2e.spec.ts
     steps:
       - uses: actions/checkout@v4
 
@@ -53,4 +53,4 @@ jobs:
         run: npm start &
 
       - name: Run test ${{ matrix.test-command.name }}
-        run: npm test -- ${{ matrix.test-command.command }}
+        run: cross-env TEST_MODE=auth jest --testPathPattern ${{ matrix.test-command.command }}
