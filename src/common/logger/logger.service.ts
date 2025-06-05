@@ -26,9 +26,12 @@ export class Logger implements LoggerService {
   }
 
   colorLog(message: any, color: MESSAGE_TYPE, ...optionalParams: any[]) {
-    const caller = styleText('yellow', `[${optionalParams[0]}]`);
-    const colorMessage = styleText(color, message);
-    this.writePipes(`${caller} ${colorMessage}`);
+    const context = this.getContext(optionalParams);
+    const logMessage = styleText(
+      color,
+      'LOG ' + context + ' ' + styleText(color, message),
+    );
+    this.writePipes(logMessage);
   }
 
   writePipes(message: string) {
@@ -46,15 +49,14 @@ export class Logger implements LoggerService {
   }
 
   log(message: any, ...optionalParams: any[]) {
-    const context = this.getContext(optionalParams);
-    const logMessage = styleText(
-      MESSAGE_TYPE.NORMAL,
-      'LOG ' + context + ' ' + styleText(MESSAGE_TYPE.NORMAL, message),
-    );
-    this.writePipes(logMessage);
+    this.colorLog(message, MESSAGE_TYPE.NORMAL, optionalParams);
   }
 
   error(message: any, ...optionalParams: any[]) {
+    this.logError(optionalParams, MESSAGE_TYPE.ERROR, message);
+  }
+
+  private logError(optionalParams: any[], color: MESSAGE_TYPE, message: any) {
     const context = this.getContext(optionalParams);
     let error = optionalParams[0];
     if (context.length === 0) {
@@ -63,19 +65,14 @@ export class Logger implements LoggerService {
       error = tempMessage.stack;
     }
     const logError = styleText(
-      MESSAGE_TYPE.ERROR,
-      'ERROR ' +
-        context +
-        ' ' +
-        styleText(MESSAGE_TYPE.ERROR, message) +
-        EOL +
-        error,
+      color,
+      'ERROR ' + context + ' ' + styleText(color, message) + EOL + error,
     );
     this.writePipes(logError);
   }
 
   warn(message: any, ...optionalParams: any[]) {
-    this.colorLog(message, MESSAGE_TYPE.WARNING, ...optionalParams);
+    this.colorLog(message, MESSAGE_TYPE.WARNING, optionalParams);
   }
 
   debug?(message: any, ...optionalParams: any[]) {
@@ -87,8 +84,7 @@ export class Logger implements LoggerService {
   }
 
   fatal?(message: any, ...optionalParams: any[]) {
-    // this.colorLog(message, MESSAGE_TYPE.FATAL, ...optionalParams);
-    this.error(message, ...optionalParams);
+    this.logError(optionalParams, MESSAGE_TYPE.FATAL, message);
   }
 
   setLogLevels?(levels: LogLevel[]) {
