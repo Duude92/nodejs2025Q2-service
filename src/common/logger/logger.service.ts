@@ -26,16 +26,28 @@ export class Logger implements LoggerService {
   }
 
   colorLog(message: any, color: MESSAGE_TYPE, ...optionalParams: any[]) {
-    const timestamp = new Date().toLocaleString() + '\t';
     const caller = styleText('yellow', `[${optionalParams[0]}]`);
     const colorMessage = styleText(color, message);
+    this.writePipes(`${caller} ${colorMessage}`);
+  }
+
+  writePipes(message: string) {
+    const timestamp = new Date().toLocaleString() + '\t';
+
     this.loggingPipes.forEach((pipe: Writable) =>
-      pipe.write(timestamp + caller + ' ' + colorMessage + EOL),
+      pipe.write(timestamp + message + EOL),
     );
   }
 
   log(message: any, ...optionalParams: any[]) {
-    this.colorLog(message, MESSAGE_TYPE.NORMAL, ...optionalParams);
+    const logMessage = styleText(
+      MESSAGE_TYPE.NORMAL,
+      'LOG ' +
+        styleText('yellow', `[${optionalParams[0]}]`) +
+        ' ' +
+        styleText(MESSAGE_TYPE.NORMAL, message),
+    );
+    this.writePipes(logMessage);
   }
 
   error(message: any, ...optionalParams: any[]) {
