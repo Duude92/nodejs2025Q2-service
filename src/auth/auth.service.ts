@@ -11,6 +11,7 @@ import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from 'jsonwebtoken';
+import { AUTH } from '../appconfig';
 
 @Injectable()
 export class AuthService {
@@ -50,5 +51,11 @@ export class AuthService {
     });
     if (!!user) throw new ConflictException('Conflict. Login already exists');
     return await this.userService.create(signupDto);
+  }
+
+  private async generateRefreshToken(payload: JwtPayload) {
+    return await this.jwtService.signAsync(payload, {
+      expiresIn: AUTH.TOKEN_REFRESH_EXPIRE_TIME,
+    });
   }
 }
