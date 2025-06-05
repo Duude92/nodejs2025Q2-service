@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -29,13 +30,16 @@ export class AuthService {
 
     if (await compare(loginDto.password, user.password)) {
       const payload = { userId: user.id, login: loginDto.login };
-
-      return {
-        accessToken: await this.jwtService.signAsync(payload),
-        refreshToken: 'refresh',
-      };
+      return await this.generateTokenPair(payload);
     }
     throw new ForbiddenException('Incorrect login or password');
+  }
+
+  async generateTokenPair(payload: JwtPayload) {
+    return {
+      accessToken: await this.jwtService.signAsync(payload),
+      refreshToken: await this.generateRefreshToken(payload),
+    };
   }
 
   async signup(signupDto: LoginDto) {
