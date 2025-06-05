@@ -22,15 +22,15 @@ jobs:
       matrix:
         node-version: [ 22.x ]
         test-command:
-          - name: users main
+          - name: users auth
             command: auth/users.e2e.spec.ts
-          - name: tracks main
+          - name: tracks auth
             command: auth/tracks.e2e.spec.ts
-          - name: artists main
+          - name: artists auth
             command: auth/artists.e2e.spec.ts
-          - name: albums main
+          - name: albums auth
             command: auth/albums.e2e.spec.ts
-          - name: favourites main
+          - name: favourites auth
             command: auth/favorites.e2e.spec.ts
     steps:
       - uses: actions/checkout@v4
