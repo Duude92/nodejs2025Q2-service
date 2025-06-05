@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
 import { LoginDto } from './dto/signup';
 import { AuthService } from './auth.service';
 import { Public } from '../common/public/public.decorator';
@@ -21,5 +21,8 @@ export class AuthController {
 
   @Public()
   @Post('refresh')
-  async refresh(@Body() { refreshToken }: { refreshToken: string }) {}
+  async refresh(@Body() { refreshToken }: { refreshToken: string }) {
+    if (!refreshToken) throw new UnauthorizedException();
+    return await this.authService.updateToken(refreshToken);
+  }
 }

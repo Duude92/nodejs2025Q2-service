@@ -58,4 +58,20 @@ export class AuthService {
       expiresIn: AUTH.TOKEN_REFRESH_EXPIRE_TIME,
     });
   }
+
+  async updateToken(refreshToken: string) {
+    console.log(`Refresh token: ${refreshToken}`);
+    try {
+      const result = await this.jwtService.verifyAsync(refreshToken);
+      console.log(result);
+      if (!result)
+        throw new ForbiddenException('Refresh token is invalid or expired');
+      return this.generateTokenPair({
+        userid: result.userId,
+        login: result.login,
+      });
+    } catch (_) {
+      throw new ForbiddenException('Refresh token is invalid or expired');
+    }
+  }
 }
