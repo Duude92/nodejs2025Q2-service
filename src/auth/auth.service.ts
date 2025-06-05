@@ -31,9 +31,8 @@ export class AuthService {
       const payload = { userId: user.id, login: loginDto.login };
 
       return {
-        token: await this.jwtService.signAsync(payload),
+        accessToken: await this.jwtService.signAsync(payload),
         refreshToken: 'refresh',
-        accessToken: 'access',
       };
     }
     throw new ForbiddenException('Incorrect login or password');
