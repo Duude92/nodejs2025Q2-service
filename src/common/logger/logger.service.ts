@@ -44,7 +44,7 @@ export class Logger implements LoggerService {
 
   getContext(optionalParams: any[]) {
     return optionalParams.length > 0
-      ? styleText('yellow', `[${optionalParams[-1]}]`)
+      ? styleText('yellow', `[${optionalParams[optionalParams.length - 1]}]`)
       : '';
   }
 
