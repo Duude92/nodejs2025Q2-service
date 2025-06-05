@@ -30,7 +30,11 @@ export class AuthService {
     if (await compare(loginDto.password, user.password)) {
       const payload = { userId: user.id, login: loginDto.login };
 
-      return { token: await this.jwtService.signAsync(payload) };
+      return {
+        token: await this.jwtService.signAsync(payload),
+        refreshToken: 'refresh',
+        accessToken: 'access',
+      };
     }
     throw new ForbiddenException('Incorrect login or password');
   }
@@ -42,6 +46,6 @@ export class AuthService {
       },
     });
     if (!!user) throw new ConflictException('Conflict. Login already exists');
-    return (await this.userService.create(signupDto)) && 'Successful signup';
+    return await this.userService.create(signupDto);
   }
 }
