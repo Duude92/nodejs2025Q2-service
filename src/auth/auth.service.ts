@@ -67,7 +67,7 @@ export class AuthService {
       if (!result)
         throw new ForbiddenException('Refresh token is invalid or expired');
       return this.generateTokenPair({
-        userid: result.userId,
+        userId: result.userId,
         login: result.login,
       });
     } catch (_) {
