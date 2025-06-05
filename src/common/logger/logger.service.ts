@@ -39,27 +39,37 @@ export class Logger implements LoggerService {
     );
   }
 
+  getContext(optionalParams: any[]) {
+    return optionalParams.length > 0
+      ? styleText('yellow', `[${optionalParams[-1]}]`)
+      : '';
+  }
+
   log(message: any, ...optionalParams: any[]) {
+    const context = this.getContext(optionalParams);
     const logMessage = styleText(
       MESSAGE_TYPE.NORMAL,
-      'LOG ' +
-        styleText('yellow', `[${optionalParams[0]}]`) +
-        ' ' +
-        styleText(MESSAGE_TYPE.NORMAL, message),
+      'LOG ' + context + ' ' + styleText(MESSAGE_TYPE.NORMAL, message),
     );
     this.writePipes(logMessage);
   }
 
   error(message: any, ...optionalParams: any[]) {
-    const error = optionalParams[1] as string;
+    const context = this.getContext(optionalParams);
+    let error = optionalParams[0];
+    if (context.length === 0) {
+      const tempMessage = message as Error;
+      message = tempMessage.message;
+      error = tempMessage.stack;
+    }
     const logError = styleText(
       MESSAGE_TYPE.ERROR,
       'ERROR ' +
-        styleText('yellow', `[${error}]`) +
+        context +
         ' ' +
         styleText(MESSAGE_TYPE.ERROR, message) +
         EOL +
-        optionalParams[0],
+        error,
     );
     this.writePipes(logError);
   }
@@ -77,7 +87,8 @@ export class Logger implements LoggerService {
   }
 
   fatal?(message: any, ...optionalParams: any[]) {
-    this.colorLog(message, MESSAGE_TYPE.FATAL, ...optionalParams);
+    // this.colorLog(message, MESSAGE_TYPE.FATAL, ...optionalParams);
+    this.error(message, ...optionalParams);
   }
 
   setLogLevels?(levels: LogLevel[]) {
