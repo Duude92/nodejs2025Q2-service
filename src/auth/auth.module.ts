@@ -8,6 +8,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { AUTH } from '../appconfig';
 import { APP_GUARD } from '@nestjs/core';
 import { RestGuard } from '../common/guard/rest.guard';
+import { LoggedExceptionFilter } from '../common/loggedexceptionfilter/loggedexception.filter';
+import { LoggerModule } from '../common/logger/logger.module';
 
 @Module({
   imports: [
@@ -18,8 +20,13 @@ import { RestGuard } from '../common/guard/rest.guard';
       secret: AUTH.JWT_SECRET_KEY,
       signOptions: { expiresIn: AUTH.TOKEN_EXPIRE_TIME },
     }),
+    forwardRef(() => LoggerModule),
   ],
   controllers: [AuthController],
-  providers: [AuthService, { provide: APP_GUARD, useClass: RestGuard }],
+  providers: [
+    AuthService,
+    { provide: APP_GUARD, useClass: RestGuard },
+    LoggedExceptionFilter,
+  ],
 })
 export class AuthModule {}
