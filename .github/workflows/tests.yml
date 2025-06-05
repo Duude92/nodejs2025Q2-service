@@ -17,7 +17,7 @@ jobs:
         ports:
           - 5432:5432
 
-    name: test - ${{ matrix.test-command.name}}
+    name: ${{ matrix.test-command.name}}
     strategy:
       fail-fast: false
       matrix:
