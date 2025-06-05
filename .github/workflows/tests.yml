@@ -32,6 +32,8 @@ jobs:
             command: auth/albums.e2e.spec.ts
           - name: favourites auth
             command: auth/favorites.e2e.spec.ts
+          - name: refresh token
+            command: refresh/refresh.e2e.spec.ts
     steps:
       - uses: actions/checkout@v4
 
