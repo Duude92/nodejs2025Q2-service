@@ -51,7 +51,17 @@ export class Logger implements LoggerService {
   }
 
   error(message: any, ...optionalParams: any[]) {
-    this.colorLog(message, MESSAGE_TYPE.ERROR, ...optionalParams);
+    const error = optionalParams[1] as string;
+    const logError = styleText(
+      MESSAGE_TYPE.ERROR,
+      'ERROR ' +
+        styleText('yellow', `[${error}]`) +
+        ' ' +
+        styleText(MESSAGE_TYPE.ERROR, message) +
+        EOL +
+        optionalParams[0],
+    );
+    this.writePipes(logError);
   }
 
   warn(message: any, ...optionalParams: any[]) {
