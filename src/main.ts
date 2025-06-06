@@ -7,6 +7,7 @@ import { readFile } from 'node:fs/promises';
 import { parse } from 'yaml';
 import { Logger } from './common/logger/logger.service';
 import * as process from 'node:process';
+import { LoggedExceptionFilter } from './common/loggedexceptionfilter/loggedexception.filter';
 
 async function bootstrap() {
   const logger = new Logger();
@@ -22,6 +23,7 @@ async function bootstrap() {
     jsonDocumentUrl: 'swagger/json',
   });
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(app.get(LoggedExceptionFilter));
   await app.listen(APP_PORT);
 }
 
