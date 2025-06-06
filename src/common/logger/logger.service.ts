@@ -14,7 +14,7 @@ export enum MESSAGE_TYPE {
   FATAL = 'redBright',
 }
 
-@Injectable({ scope: Scope.TRANSIENT })
+@Injectable()
 export class Logger implements LoggerService {
   private readonly loggingPipes: Writable[];
 
