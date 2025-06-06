@@ -1,4 +1,4 @@
-import { Injectable, LoggerService, LogLevel, Scope } from '@nestjs/common';
+import { Injectable, LoggerService, LogLevel } from '@nestjs/common';
 import { Writable } from 'node:stream';
 import { EOL } from 'node:os';
 import { styleText } from 'node:util';
@@ -7,7 +7,7 @@ import { LOGGING } from '../../appconfig';
 import { createWriteStream } from 'node:fs';
 
 export enum MESSAGE_TYPE {
-  NORMAL = 'green',
+  LOG = 'green',
   ERROR = 'red',
   WARNING = 'yellowBright',
   DEBUG = 'blue',
@@ -25,11 +25,16 @@ export class Logger implements LoggerService {
       this.loggingPipes.push(createWriteStream(LOGGING.LOG_FILE));
   }
 
-  colorLog(message: any, color: MESSAGE_TYPE, ...optionalParams: any[]) {
+  colorLog(
+    message: any,
+    color: MESSAGE_TYPE,
+    level: string,
+    ...optionalParams: any[]
+  ) {
     const context = this.getContext(optionalParams);
     const logMessage = styleText(
       color,
-      'LOG ' + context + ' ' + styleText(color, message),
+      level + ' ' + context + ' ' + styleText(color, message),
     );
     this.writePipes(logMessage);
   }
@@ -49,7 +54,7 @@ export class Logger implements LoggerService {
   }
 
   log(message: any, ...optionalParams: any[]) {
-    this.colorLog(message, MESSAGE_TYPE.NORMAL, optionalParams);
+    this.colorLog(message, MESSAGE_TYPE.LOG, 'LOG', optionalParams);
   }
 
   error(message: any, ...optionalParams: any[]) {
@@ -72,11 +77,11 @@ export class Logger implements LoggerService {
   }
 
   warn(message: any, ...optionalParams: any[]) {
-    this.colorLog(message, MESSAGE_TYPE.WARNING, optionalParams);
+    this.colorLog(message, MESSAGE_TYPE.WARNING, 'WARNING', optionalParams);
   }
 
   debug?(message: any, ...optionalParams: any[]) {
-    this.colorLog(message, MESSAGE_TYPE.DEBUG, ...optionalParams);
+    this.colorLog(message, MESSAGE_TYPE.DEBUG, 'DEBUG', ...optionalParams);
   }
 
   verbose?(message: any, ...optionalParams: any[]) {
