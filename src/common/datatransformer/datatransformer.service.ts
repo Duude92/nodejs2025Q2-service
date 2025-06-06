@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ITransformer } from './ITransformer';
 import { LoginReqTransform } from './transformers/login.req';
 import { LoginResTransform } from './transformers/login.res';
+import { RefreshReqTransform } from './transformers/refresh.req';
+import { RefreshResTransform } from './transformers/refresh.res';
 
 @Injectable()
 export class DataTransformerService {
@@ -13,6 +15,8 @@ export class DataTransformerService {
   constructor() {
     this.addTransformer(LoginReqTransform);
     this.addTransformer(LoginResTransform);
+    this.addTransformer(RefreshReqTransform);
+    this.addTransformer(RefreshResTransform);
   }
 
   getTransformers(isRequest: boolean) {
