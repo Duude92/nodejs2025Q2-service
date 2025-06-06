@@ -8,6 +8,7 @@ import { parse } from 'yaml';
 import { Logger } from './common/logger/logger.service';
 import * as process from 'node:process';
 import { LoggedExceptionFilter } from './common/loggedexceptionfilter/loggedexception.filter';
+import { LoggedInterceptor } from './common/loggedinterceptor/logged.interceptor';
 
 async function bootstrap() {
   const logger = new Logger();
@@ -24,6 +25,7 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(app.get(LoggedExceptionFilter));
+  app.useGlobalInterceptors(app.get(LoggedInterceptor));
   await app.listen(APP_PORT);
 }
 
