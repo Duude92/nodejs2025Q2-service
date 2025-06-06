@@ -10,6 +10,7 @@ import * as datasource from './datasource';
 import { LoggerModule } from './common/logger/logger.module';
 import { LoggedExceptionFilter } from './common/loggedexceptionfilter/loggedexception.filter';
 import { LoggedMiddleware } from './common/loggedmiddleware/logged.middleware';
+import { LoggedInterceptor } from './common/loggedinterceptor/logged.interceptor';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { LoggedMiddleware } from './common/loggedmiddleware/logged.middleware';
       }),
     }),
   ],
-  providers: [LoggedExceptionFilter],
+  providers: [LoggedExceptionFilter, LoggedInterceptor],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
