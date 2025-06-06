@@ -94,7 +94,7 @@ export class Logger implements LoggerService {
   responseError(message: string, stack: string, url: string) {
     const logMessage = styleText(
       ['bgCyan', 'yellow'],
-      `RESPONSE ERROR:    endpoint - ${url}    Exception: ${message}`,
+      `RESPONSE EXCEPTION:    endpoint - ${url}    Exception: ${message}`,
     );
     this.writePipes(logMessage);
   }
