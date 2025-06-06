@@ -7,6 +7,8 @@ import { FavsModule } from './favs/favs.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import * as datasource from './datasource';
+import { LoggerModule } from './common/logger/logger.module';
+import { LoggedExceptionFilter } from './common/loggedexceptionfilter/loggedexception.filter';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import * as datasource from './datasource';
     FavsModule,
     AuthModule,
     TypeOrmModule.forRoot(datasource.default.options),
+    LoggerModule,
   ],
+  providers: [LoggedExceptionFilter],
 })
 export class AppModule {}
