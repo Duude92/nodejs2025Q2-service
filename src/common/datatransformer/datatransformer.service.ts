@@ -4,6 +4,7 @@ import { LoginReqTransform } from './transformers/login.req';
 import { LoginResTransform } from './transformers/login.res';
 import { RefreshReqTransform } from './transformers/refresh.req';
 import { RefreshResTransform } from './transformers/refresh.res';
+import { SignupResTransform } from './transformers/signup.req';
 
 @Injectable()
 export class DataTransformerService {
@@ -17,6 +18,7 @@ export class DataTransformerService {
     this.addTransformer(LoginResTransform);
     this.addTransformer(RefreshReqTransform);
     this.addTransformer(RefreshResTransform);
+    this.addTransformer(SignupResTransform);
   }
 
   getTransformers(isRequest: boolean) {
