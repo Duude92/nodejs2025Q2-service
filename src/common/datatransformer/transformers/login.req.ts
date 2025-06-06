@@ -6,7 +6,6 @@ export const LoginReqTransform = {
   isRequest: true,
   transform: (data) => {
     const newObject = JSON.parse(JSON.stringify(data)) as CreateUserDto;
-    newObject.login = '[CREDENTIAL]';
     newObject.password = '[CREDENTIAL]';
     return newObject;
   },
