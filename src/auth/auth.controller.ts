@@ -5,15 +5,12 @@ import {
   HttpStatus,
   Post,
   UnauthorizedException,
-  UseFilters,
 } from '@nestjs/common';
 import { LoginDto } from './dto/signup';
 import { AuthService } from './auth.service';
 import { Public } from '../common/public/public.decorator';
-import { LoggedExceptionFilter } from '../common/loggedexceptionfilter/loggedexception.filter';
 
 @Controller('auth')
-@UseFilters(LoggedExceptionFilter)
 export class AuthController {
   constructor(private authService: AuthService) {}
 
