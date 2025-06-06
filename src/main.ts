@@ -23,7 +23,7 @@ async function bootstrap() {
     jsonDocumentUrl: 'swagger/json',
   });
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalFilters(app.get(LoggedExceptionFilter));
+  app.useGlobalFilters(new LoggedExceptionFilter(logger));
   await app.listen(APP_PORT);
 }
 
