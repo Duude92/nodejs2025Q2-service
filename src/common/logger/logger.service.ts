@@ -5,6 +5,7 @@ import { styleText } from 'node:util';
 import * as process from 'node:process';
 import { LOGGING } from '../../appconfig';
 import { createWriteStream } from 'node:fs';
+import { DataTransformerService } from '../datatransformer/datatransformer.service';
 
 export enum MESSAGE_TYPE {
   LOG = 'green',
@@ -17,8 +18,10 @@ export enum MESSAGE_TYPE {
 @Injectable()
 export class Logger implements LoggerService {
   private readonly loggingPipes: Writable[];
+  private readonly dataTransformerService: DataTransformerService;
 
   constructor() {
+    this.dataTransformerService = new DataTransformerService();
     this.loggingPipes = new Array<Writable>();
     if (LOGGING.CONSOLE_LOG) this.loggingPipes.push(process.stdout);
     if (!!LOGGING.LOG_FILE && LOGGING.LOG_FILE.length !== 0)
@@ -119,9 +122,14 @@ export class Logger implements LoggerService {
   }
 
   logRequest(method: string, url: string, query: object, body: any) {
+    const transformedBody = this.dataTransformerService.transform(
+      body,
+      url,
+      true,
+    );
     const logMessage = styleText(
       ['bgCyan', 'yellow'],
-      `REQUEST    ${method}:${url}  ${Object.getOwnPropertyNames(query).length > 0 ? 'query: ' + JSON.stringify(query) : ''} ${Object.getOwnPropertyNames(body).length > 0 ? 'body: ' + JSON.stringify(body) : ''}`,
+      `REQUEST    ${method}:${url}  ${Object.getOwnPropertyNames(query).length > 0 ? 'query: ' + JSON.stringify(query) : ''} ${Object.getOwnPropertyNames(transformedBody).length > 0 ? 'body: ' + JSON.stringify(transformedBody) : ''}`,
     );
     this.writePipes(logMessage);
   }
