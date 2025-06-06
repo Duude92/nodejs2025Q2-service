@@ -103,4 +103,18 @@ export class Logger implements LoggerService {
     );
     this.writePipes(logMessage);
   }
+
+  logResponse(
+    method: string,
+    url: string,
+    rCode: number,
+    message: string,
+    data: object,
+  ) {
+    const logMessage = styleText(
+      ['bgCyan', 'yellow'],
+      `RESPONSE    ${method}:${url}  code:${rCode}  ${!message ? '' : 'message:' + message}${!data ? '' : '\nData:\n' + JSON.stringify(data)}`,
+    );
+    this.writePipes(logMessage);
+  }
 }
