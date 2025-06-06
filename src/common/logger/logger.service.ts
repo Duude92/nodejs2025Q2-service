@@ -90,4 +90,12 @@ export class Logger implements LoggerService {
   setLogLevels?(levels: LogLevel[]) {
     // throw new Error('Method not implemented.');
   }
+
+  responseError(message: string, stack: string, url: string) {
+    const logMessage = styleText(
+      ['bgCyan', 'yellow'],
+      `RESPONSE ERROR:    endpoint - ${url}    Exception: ${message}`,
+    );
+    this.writePipes(logMessage);
+  }
 }
