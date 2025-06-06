@@ -8,9 +8,7 @@ export class LoggedMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: () => void) {
     res.on('close', () => {
-      this.logger.log(
-        `${req.method}:${req.url}    ${Object.getOwnPropertyNames(req.query).length > 0 ? 'query: ' + JSON.stringify(req.query) : ''}   ${Object.getOwnPropertyNames(req.query).length > 0 ? 'body: ' + JSON.stringify(req.body) : ''}`,
-      );
+      this.logger.logRequest(req.method, req.url, req.query, req.body);
     });
     next();
   }

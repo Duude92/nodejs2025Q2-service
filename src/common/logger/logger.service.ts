@@ -117,4 +117,12 @@ export class Logger implements LoggerService {
     );
     this.writePipes(logMessage);
   }
+
+  logRequest(method: string, url: string, query: object, body: any) {
+    const logMessage = styleText(
+      ['bgCyan', 'yellow'],
+      `REQUEST    ${method}:${url}  ${Object.getOwnPropertyNames(query).length > 0 ? 'query: ' + JSON.stringify(query) : ''} ${Object.getOwnPropertyNames(body).length > 0 ? 'body: ' + JSON.stringify(body) : ''}`,
+    );
+    this.writePipes(logMessage);
+  }
 }
