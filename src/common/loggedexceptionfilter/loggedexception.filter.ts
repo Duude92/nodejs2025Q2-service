@@ -17,12 +17,16 @@ export class LoggedExceptionFilter<T extends HttpException>
   constructor(private readonly loggerService: Logger) {}
 
   catch(exception: T, host: ArgumentsHost) {
-    this.loggerService.error(exception.message, exception.stack, host);
-
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
+
+    this.loggerService.responseError(
+      exception.message,
+      exception.stack,
+      request.url,
+    );
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),
