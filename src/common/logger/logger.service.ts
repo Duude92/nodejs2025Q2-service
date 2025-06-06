@@ -114,9 +114,14 @@ export class Logger implements LoggerService {
     message: string,
     data: object,
   ) {
+    const transformedBody = this.dataTransformerService.transform(
+      data,
+      url,
+      false,
+    );
     const logMessage = styleText(
       ['bgCyan', 'yellow'],
-      `RESPONSE    ${method}:${url}  code:${rCode}  ${!message ? '' : 'message:' + message}${!data ? '' : '\nData:\n' + JSON.stringify(data)}`,
+      `RESPONSE    ${method}:${url}  code:${rCode}  ${!message ? '' : 'message:' + message}${!transformedBody ? '' : '\nData:\n' + JSON.stringify(transformedBody)}`,
     );
     this.writePipes(logMessage);
   }
