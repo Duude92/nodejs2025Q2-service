@@ -4,8 +4,9 @@ import { EOL } from 'node:os';
 import { styleText } from 'node:util';
 import * as process from 'node:process';
 import { LOGGING } from '../../appconfig';
-import { createWriteStream } from 'node:fs';
+import { createWriteStream, WriteStream, statSync } from 'node:fs';
 import { DataTransformerService } from '../datatransformer/datatransformer.service';
+import { join as joinPath } from 'node:path';
 
 export enum MESSAGE_TYPE {
   LOG = 'green',
@@ -19,13 +20,23 @@ export enum MESSAGE_TYPE {
 export class Logger implements LoggerService {
   private readonly loggingPipes: Writable[];
   private readonly dataTransformerService: DataTransformerService;
+  private logFile: WriteStream;
 
   constructor() {
     this.dataTransformerService = new DataTransformerService();
     this.loggingPipes = new Array<Writable>();
     if (LOGGING.CONSOLE_LOG) this.loggingPipes.push(process.stdout);
     if (!!LOGGING.LOG_FILE && LOGGING.LOG_FILE.length !== 0)
-      this.loggingPipes.push(createWriteStream(LOGGING.LOG_FILE));
+      this.createLogFile();
+  }
+
+  createLogFile() {
+    const filename = joinPath(
+      LOGGING.LOG_FOLDER,
+      Date.now() + '-' + LOGGING.LOG_FILE,
+    );
+    this.logFile = createWriteStream(filename);
+    this.loggingPipes.push(this.logFile);
   }
 
   colorLog(
@@ -48,6 +59,14 @@ export class Logger implements LoggerService {
     this.loggingPipes.forEach((pipe: Writable) =>
       pipe.write(timestamp + message + EOL),
     );
+    if (this.logFile && statSync(this.logFile.path).size > 1024) {
+      const fileIdx = this.loggingPipes.findIndex(
+        (pipe) => pipe == this.logFile,
+      );
+      this.loggingPipes.splice(fileIdx, 1);
+      this.logFile.close();
+      this.createLogFile();
+    }
   }
 
   getContext(optionalParams: any[]) {
