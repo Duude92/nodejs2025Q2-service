@@ -35,9 +35,17 @@ export class DataTransformerService {
     transformers[transformer.endpoint] = transformer;
   }
 
-  transform(input: unknown, endpoint: string, isRequest: boolean) {
+  transform(
+    input: unknown,
+    endpoint: string,
+    isRequest: boolean,
+    method: string = 'POST',
+  ) {
     const transformers = this.getTransformers(isRequest);
-    if (!transformers[endpoint]) return input;
+    if (!transformers[endpoint]) {
+      endpoint = method + ':' + endpoint;
+      if (!transformers[endpoint]) return input;
+    }
     return transformers[endpoint].transform(input);
   }
 }
