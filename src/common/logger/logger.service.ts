@@ -20,14 +20,17 @@ export enum MESSAGE_TYPE {
 export class Logger implements LoggerService {
   private readonly loggingPipes: Writable[];
   private readonly dataTransformerService: DataTransformerService;
+  private readonly fileSizeMax: number;
   private logFile: WriteStream;
 
   constructor() {
     this.dataTransformerService = new DataTransformerService();
     this.loggingPipes = new Array<Writable>();
     if (LOGGING.CONSOLE_LOG) this.loggingPipes.push(process.stdout);
-    if (!!LOGGING.LOG_FILE && LOGGING.LOG_FILE.length !== 0)
+    if (!!LOGGING.LOG_FILE && LOGGING.LOG_FILE.length !== 0) {
       this.createLogFile();
+      this.fileSizeMax = LOGGING.LOG_SIZE;
+    }
   }
 
   createLogFile() {
@@ -59,7 +62,7 @@ export class Logger implements LoggerService {
     this.loggingPipes.forEach((pipe: Writable) =>
       pipe.write(timestamp + message + EOL),
     );
-    if (this.logFile && statSync(this.logFile.path).size > 1024) {
+    if (this.logFile && statSync(this.logFile.path).size > this.fileSizeMax) {
       const fileIdx = this.loggingPipes.findIndex(
         (pipe) => pipe == this.logFile,
       );
