@@ -9,7 +9,7 @@ export class LoggedMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: () => void) {
     res.on('close', () => {
       let endpoint = req.url;
-      if (req.route.path.includes(':id')) {
+      if (req.route?.path.includes(':id')) {
         const route = req.route.path as string;
         const idx = route.indexOf('/:id');
         endpoint = req.url.substring(0, idx);
