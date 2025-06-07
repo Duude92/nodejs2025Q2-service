@@ -55,6 +55,7 @@ export class AuthService {
 
   private async generateRefreshToken(payload: JwtPayload) {
     return await this.jwtService.signAsync(payload, {
+      secret: AUTH.JWT_SECRET_REFRESH_KEY,
       expiresIn: AUTH.TOKEN_REFRESH_EXPIRE_TIME,
     });
   }
