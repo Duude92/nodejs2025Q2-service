@@ -126,11 +126,18 @@ export class Logger implements LoggerService {
     this.writePipes(logMessage);
   }
 
-  logRequest(method: string, url: string, query: object, body: any) {
+  logRequest(
+    method: string,
+    url: string,
+    endpoint: string,
+    query: object,
+    body: any,
+  ) {
     const transformedBody = this.dataTransformerService.transform(
       body,
-      url,
+      endpoint,
       true,
+      method,
     );
     const logMessage = styleText(
       ['bgCyan', 'yellow'],
