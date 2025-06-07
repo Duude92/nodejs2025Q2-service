@@ -11,10 +11,11 @@ import { LoggedExceptionFilter } from './common/loggedexceptionfilter/loggedexce
 import { LoggedInterceptor } from './common/loggedinterceptor/logged.interceptor';
 
 async function bootstrap() {
-  const logger = new Logger();
   const app = await NestFactory.create(AppModule, {
-    logger: logger,
+    bufferLogs: true,
   });
+  const logger = app.get(Logger);
+  app.useLogger(logger);
   process.on('uncaughtException', (err) => logger.fatal(err));
   process.on('unhandledRejection', (err) => logger.fatal(err));
 
