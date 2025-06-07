@@ -21,6 +21,7 @@ export const LOGGING = {
   CONSOLE_LOG: isTrue(process.env.ENABLE_CONSOLE_LOG) || true,
   LOG_FILE: process.env.LOG_FILE,
   LOG_LEVEL: process.env.LOG_LEVEL || 'info',
+  LOG_FOLDER: process.env.LOG_FOLDER || 'logs',
 };
 
 export const DB_CONNECTION = {
