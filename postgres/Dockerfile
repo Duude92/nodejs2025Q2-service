@@ -1,3 +1,4 @@
 FROM postgres:17-alpine
 ENV POSTGRES_USER='admin'
 ENV POSTGRES_PASSWORD='passwd'
+EXPOSE 5432
