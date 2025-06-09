@@ -14,7 +14,13 @@ import * as datasource from './datasource';
     ArtistModule,
     AlbumModule,
     FavsModule,
-    TypeOrmModule.forRoot(datasource.default.options),
+    TypeOrmModule.forRootAsync({
+      useFactory: () => ({
+        ...datasource.default.options,
+        retryDelay: 3000,
+        retryAttempts: 10,
+      }),
+    }),
   ],
 })
 export class AppModule {}
