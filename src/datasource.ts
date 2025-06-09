@@ -6,5 +6,6 @@ export default new DataSource({
   ...DB_CONNECTION,
   entities: [__dirname + '/**/*.entity{.ts,.js}'],
   synchronize: false,
-  migrations: [__dirname + '/../migrations/*.ts'],
+  migrations: [__dirname + '/../migrations/*{.ts,.js}'],
+  migrationsRun: true,
 });
