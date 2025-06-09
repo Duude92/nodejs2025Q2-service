@@ -16,6 +16,18 @@ export enum MESSAGE_TYPE {
   FATAL = 'redBright',
 }
 
+export enum LOGGED_ITEM {
+  LOG = 1,
+  DEBUG = 1 << 1,
+  WARNING = 1 << 2,
+  ERROR = 1 << 3,
+  FATAL = 1 << 4,
+  VERBOSE = 1 << 5,
+  RES_ERROR = 1 << 6,
+  RESPONSE = 1 << 7,
+  REQUEST = 1 << 8,
+}
+
 @Injectable()
 export class Logger implements LoggerService {
   private readonly loggingPipes: Writable[];
