@@ -41,12 +41,39 @@ export const LOGGING = {
     return numSize * SIZE_POSTFIX[postfix.toLowerCase()];
   },
   get LOG_LEVELS(): LOGGED_ITEM {
-    const rawLevels = process.env.LOG_LEVELS || 'log';
-    const rawLevelsArray = rawLevels.split(',');
-    const levelsArray = rawLevelsArray
-      .filter((level) => Object.keys(LOGGED_ITEM).includes(level.toUpperCase()))
-      .map((level) => LOGGED_ITEM[level.toUpperCase()]);
-    return levelsArray.reduce((acc, level) => acc | level);
+    const defaultLog =
+      LOGGED_ITEM.LOG |
+      LOGGED_ITEM.REQUEST |
+      LOGGED_ITEM.RESPONSE |
+      LOGGED_ITEM.ERROR |
+      LOGGED_ITEM.RES_ERROR;
+    if (!process.env.LOG_LEVELS && !process.env.LOG_PRESET) return defaultLog;
+    if (!process.env.LOG_PRESET) {
+      const rawLevels = process.env.LOG_LEVELS;
+      const rawLevelsArray = rawLevels.split(',');
+      const levelsArray = rawLevelsArray
+        .filter((level) =>
+          Object.keys(LOGGED_ITEM).includes(level.toUpperCase()),
+        )
+        .map((level) => LOGGED_ITEM[level.toUpperCase()]);
+      return levelsArray.reduce((acc, level) => acc | level);
+    }
+    const preset = process.env.LOG_PRESET;
+    switch (preset.toLowerCase()) {
+      case 'verbose':
+        return 512 as LOGGED_ITEM; //all items magic number
+      case 'error':
+        return LOGGED_ITEM.ERROR | LOGGED_ITEM.FATAL;
+      case 'messages':
+        return (
+          LOGGED_ITEM.REQUEST | LOGGED_ITEM.RESPONSE | LOGGED_ITEM.RES_ERROR
+        );
+      case 'none':
+        return 0 as LOGGED_ITEM;
+      case 'normal':
+      default:
+        return defaultLog;
+    }
   },
 };
 
