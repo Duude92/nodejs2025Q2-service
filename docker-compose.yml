@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  postgres:
+    build: ./postgres/
+    environment:
+      POSTGRES_DB: ${PG_DB}
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWD}
+      POSTGRES_INITDB_ARGS: "-c logging_collector=on -c log_directory=/var/log/postgresql -c log_filename=postgresql.log"
+    restart: always
+    networks:
+      - rest-svc-network
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+      - pg-logs:/var/log/postgresql/
+    ports:
+      - ${PG_PORT}:${PG_PORT}
+
+  backend:
+    build: ./
+    restart: always
+    depends_on:
+      - postgres
+    networks:
+      - rest-svc-network
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      PG_HOST: postgres
+
+networks:
+  rest-svc-network:
+    driver: bridge
+volumes:
+  pg-data:
+  pg-logs:
