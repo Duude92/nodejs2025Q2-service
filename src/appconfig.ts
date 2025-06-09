@@ -1,5 +1,6 @@
 import * as process from 'node:process';
 import { config } from 'dotenv';
+import { LOGGED_ITEM } from './common/logger/logger.service';
 
 config();
 const isTrue = (value: string | undefined): boolean =>
@@ -28,7 +29,6 @@ enum SIZE_POSTFIX {
 export const LOGGING = {
   CONSOLE_LOG: isTrue(process.env.ENABLE_CONSOLE_LOG) || true,
   LOG_FILE: process.env.LOG_FILE,
-  LOG_LEVEL: process.env.LOG_LEVEL || 'info',
   LOG_FOLDER: process.env.LOG_FOLDER || 'logs',
   get LOG_SIZE() {
     const size = process.env.LOG_FILE_SIZE || '500K';
@@ -39,6 +39,14 @@ export const LOGGING = {
       size.substring(0, size.length - (isLastNan ? 1 : 0)),
     );
     return numSize * SIZE_POSTFIX[postfix.toLowerCase()];
+  },
+  get LOG_LEVELS(): LOGGED_ITEM {
+    const rawLevels = process.env.LOG_LEVELS || 'log';
+    const rawLevelsArray = rawLevels.split(',');
+    const levelsArray = rawLevelsArray
+      .filter((level) => Object.keys(LOGGED_ITEM).includes(level.toUpperCase()))
+      .map((level) => LOGGED_ITEM[level.toUpperCase()]);
+    return levelsArray.reduce((acc, level) => acc | level);
   },
 };
 
