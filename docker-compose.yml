@@ -7,6 +7,7 @@ services:
       POSTGRES_DB: ${PG_DB}
       POSTGRES_USER: ${PG_USER}
       POSTGRES_PASSWORD: ${PG_PASSWD}
+      POSTGRES_INITDB_ARGS: "-c logging_collector=on -c log_directory=/var/log/postgresql -c log_filename=postgresql.log -c log_statement=all"
     restart: always
     networks:
       - rest-svc-network
@@ -16,12 +17,6 @@ services:
     ports:
       - ${PG_PORT}:${PG_PORT}
 
-    command: >
-      postgres
-      -c logging_collector=on
-      -c log_directory=/var/log/postgresql
-      -c log_filename=postgresql.log
-      -c log_statement=all
   backend:
     build: ./
     restart: always
