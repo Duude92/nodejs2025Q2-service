@@ -13,7 +13,7 @@ services:
       - rest-svc-network
     volumes:
       - pg-data:/var/lib/postgresql/data
-      - ./logs:/var/log/postgresql/
+      - pg-logs:/var/log/postgresql/
     ports:
       - ${PG_PORT}:${PG_PORT}
 
@@ -34,3 +34,4 @@ networks:
     driver: bridge
 volumes:
   pg-data:
+  pg-logs:
