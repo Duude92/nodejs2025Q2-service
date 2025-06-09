@@ -33,6 +33,7 @@ export class Logger implements LoggerService {
   private readonly loggingPipes: Writable[];
   private readonly dataTransformerService: DataTransformerService;
   private readonly fileSizeMax: number;
+  private readonly loggedItems: LOGGED_ITEM;
   private logFile: WriteStream;
 
   constructor() {
@@ -43,6 +44,7 @@ export class Logger implements LoggerService {
       this.createLogFile();
       this.fileSizeMax = LOGGING.LOG_SIZE;
     }
+    this.loggedItems = LOGGING.LOG_LEVELS;
   }
 
   createLogFile() {
@@ -91,11 +93,13 @@ export class Logger implements LoggerService {
   }
 
   log(message: any, ...optionalParams: any[]) {
-    this.colorLog(message, MESSAGE_TYPE.LOG, 'LOG', optionalParams);
+    if (this.loggedItems & LOGGED_ITEM.LOG)
+      this.colorLog(message, MESSAGE_TYPE.LOG, 'LOG', optionalParams);
   }
 
   error(message: any, ...optionalParams: any[]) {
-    this.logError(optionalParams, MESSAGE_TYPE.ERROR, message);
+    if (this.loggedItems & LOGGED_ITEM.ERROR)
+      this.logError(optionalParams, MESSAGE_TYPE.ERROR, message);
   }
 
   private logError(optionalParams: any[], color: MESSAGE_TYPE, message: any) {
@@ -114,26 +118,28 @@ export class Logger implements LoggerService {
   }
 
   warn(message: any, ...optionalParams: any[]) {
-    this.colorLog(message, MESSAGE_TYPE.WARNING, 'WARNING', optionalParams);
+    if (this.loggedItems & LOGGED_ITEM.WARNING)
+      this.colorLog(message, MESSAGE_TYPE.WARNING, 'WARNING', optionalParams);
   }
 
   debug?(message: any, ...optionalParams: any[]) {
-    this.colorLog(message, MESSAGE_TYPE.DEBUG, 'DEBUG', ...optionalParams);
+    if (this.loggedItems & LOGGED_ITEM.DEBUG)
+      this.colorLog(message, MESSAGE_TYPE.DEBUG, 'DEBUG', ...optionalParams);
   }
 
   verbose?(message: any, ...optionalParams: any[]) {
-    this.debug(message, ...optionalParams);
+    if (this.loggedItems & LOGGED_ITEM.VERBOSE)
+      this.debug(message, ...optionalParams);
   }
 
   fatal?(message: any, ...optionalParams: any[]) {
-    this.logError(optionalParams, MESSAGE_TYPE.FATAL, message);
-  }
-
-  setLogLevels?(levels: LogLevel[]) {
-    // throw new Error('Method not implemented.');
+    if (this.loggedItems & LOGGED_ITEM.FATAL)
+      this.logError(optionalParams, MESSAGE_TYPE.FATAL, message);
   }
 
   responseError(message: string, stack: string, url: string) {
+    if (!(this.loggedItems & LOGGED_ITEM.RES_ERROR)) return;
+
     const logMessage = styleText(
       ['bgCyan', 'yellow'],
       `RESPONSE EXCEPTION:    endpoint - ${url}    Exception: ${message}`,
@@ -148,6 +154,8 @@ export class Logger implements LoggerService {
     message: string,
     data: object,
   ) {
+    if (!(this.loggedItems & LOGGED_ITEM.RESPONSE)) return;
+
     const transformedBody = this.dataTransformerService.transform(
       data,
       url,
@@ -167,6 +175,8 @@ export class Logger implements LoggerService {
     query: object,
     body: any,
   ) {
+    if (!(this.loggedItems & LOGGED_ITEM.REQUEST)) return;
+
     const transformedBody = this.dataTransformerService.transform(
       body,
       endpoint,
