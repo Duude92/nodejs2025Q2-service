@@ -1,4 +1,4 @@
-import { Injectable, LoggerService, LogLevel } from '@nestjs/common';
+import { Injectable, LoggerService } from '@nestjs/common';
 import { Writable } from 'node:stream';
 import { EOL } from 'node:os';
 import { styleText } from 'node:util';
