@@ -2,6 +2,7 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { LoginDto } from './dto/signup';
 import { compare } from 'bcrypt';
@@ -28,6 +29,7 @@ export class AuthService {
       },
       select: ['id', 'password'],
     });
+    if (!user) throw new NotFoundException('User not found');
 
     if (await compare(loginDto.password, user.password)) {
       const payload = { userId: user.id, login: loginDto.login };
