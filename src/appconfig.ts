@@ -66,7 +66,10 @@ export const LOGGING = {
         return LOGGED_ITEM.ERROR | LOGGED_ITEM.FATAL;
       case 'messages':
         return (
-          LOGGED_ITEM.REQUEST | LOGGED_ITEM.RESPONSE | LOGGED_ITEM.RES_ERROR
+          LOGGED_ITEM.REQUEST |
+          LOGGED_ITEM.RESPONSE |
+          LOGGED_ITEM.RES_ERROR |
+          LOGGED_ITEM.LOG
         );
       case 'none':
         return 0 as LOGGED_ITEM;
