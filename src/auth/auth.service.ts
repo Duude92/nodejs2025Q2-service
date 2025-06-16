@@ -65,7 +65,6 @@ export class AuthService {
   async updateToken(refreshToken: string) {
     try {
       const result = await this.jwtService.verifyAsync(refreshToken);
-      console.log(result);
       if (!result)
         throw new ForbiddenException('Refresh token is invalid or expired');
       return this.generateTokenPair({
