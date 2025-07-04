@@ -1,15 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { ArtistRepository } from '../repositories/artist.repository';
-import { createArtist } from './entities/artist.entity';
+import { Artist, createArtist } from './entities/artist.entity';
 import { TrackService } from '../track/track.service';
 import { AlbumService } from '../album/album.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ArtistService {
   constructor(
-    private readonly artistRepository: ArtistRepository,
+    @InjectRepository(Artist)
+    private readonly artistRepository: Repository<Artist>,
     private readonly trackService: TrackService,
     private readonly albumService: AlbumService,
   ) {}

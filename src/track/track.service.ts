@@ -1,12 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { TrackRepository } from '../repositories/track.repository';
-import { createTrack } from './entities/track.entity';
+import { createTrack, Track } from './entities/track.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TrackService {
-  constructor(private readonly trackRepository: TrackRepository) {}
+  constructor(
+    @InjectRepository(Track)
+    private readonly trackRepository: Repository<Track>,
+  ) {}
 
   async validateEntityExists(id: string): Promise<boolean> {
     try {
@@ -49,10 +53,10 @@ export class TrackService {
 
   async clearArtist(artistId: string) {
     const tracks = await this.trackRepository.find({ where: { artistId } });
-    tracks.forEach((track) => {
+    for (const track of tracks) {
       track.artistId = null;
-      this.trackRepository.save(track);
-    });
+      await this.trackRepository.save(track);
+    }
   }
 
   async remove(id: string) {
@@ -63,9 +67,9 @@ export class TrackService {
 
   async clearAlbums(id: string) {
     const tracks = await this.trackRepository.find({ where: { albumId: id } });
-    tracks.forEach((track) => {
+    for (const track of tracks) {
       track.albumId = null;
-      this.trackRepository.save(track);
-    });
+      await this.trackRepository.save(track);
+    }
   }
 }

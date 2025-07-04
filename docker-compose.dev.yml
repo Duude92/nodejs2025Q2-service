@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  backend:
+    develop:
+      watch:
+        - path: ./
+          action: sync
+          target: /app
+    entrypoint: "npm run start:dev"

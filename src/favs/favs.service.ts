@@ -2,14 +2,15 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { FavRepository } from '../repositories/fav.repository';
-import { IFavoritesResponse } from './entities/fav.entity';
+import { Favorites, IFavoritesResponse } from './entities/fav.entity';
 import { ArtistService } from '../artist/artist.service';
 import { TrackService } from '../track/track.service';
 import { AlbumService } from '../album/album.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { IEntity } from '../repositories/IEntity';
 
 @Injectable()
 export class FavsService {
@@ -20,7 +21,8 @@ export class FavsService {
   };
 
   constructor(
-    private readonly favouriteRepository: FavRepository,
+    @InjectRepository(Favorites)
+    private readonly favouriteRepository: Repository<Favorites>,
     private readonly artistsService: ArtistService,
     private readonly trackService: TrackService,
     private readonly albumService: AlbumService,
@@ -30,10 +32,18 @@ export class FavsService {
       tracks: trackService,
       albums: albumService,
     };
+    this.favouriteRepository.find().then((result) => {
+      if (!result[0]) this.favouriteRepository.save(new Favorites());
+    });
   }
 
   async validateRouteAndGetFavs(route: string) {
     const favs = (await this.favouriteRepository.find())[0];
+    if (!favs)
+      throw new HttpException(
+        'Something went wrong',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
 
     const field = route + 's';
     if (!(field in favs))
@@ -55,32 +65,28 @@ export class FavsService {
         'Something went wrong',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    const result: IFavoritesResponse = { artists: [], albums: [], tracks: [] };
-    for (const key in result) {
-      for (const fav of favs[key]) {
-        try {
-          result[key].push(await this.services[key].findOne(fav));
-        } catch (_) {
-          await this.remove(fav, key.substring(0, key.length - 1));
-        }
-      }
-    }
+    const result = favs;
     return result;
   }
 
   async remove(id: string, route: string) {
     const { favs, field } = await this.validateRouteAndGetFavs(route);
-    const idx = favs[field].findIndex((fav: string) => fav === id);
-    if (idx === -1) throw new NotFoundException();
+    const idx = favs[field].findIndex((fav: IEntity) => fav.id === id);
     favs[field].splice(idx, 1);
-    return favs[field];
+    await this.favouriteRepository.save(favs);
+    return 'Deleted successfully';
   }
 
   async add(id: string, route: string) {
     const { favs, field } = await this.validateRouteAndGetFavs(route);
-    const exist = await this.services[field].validateEntityExists(id);
-    if (!exist) throw new UnprocessableEntityException();
-    favs[field].push(id);
+    try {
+      const exist = await this.services[field].findOne(id);
+      if (!exist) throw new UnprocessableEntityException();
+      favs[field].push(exist);
+      await this.favouriteRepository.save(favs);
+    } catch (_error) {
+      throw new UnprocessableEntityException();
+    }
     return 'Added successfully';
   }
 }

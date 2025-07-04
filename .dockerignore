@@ -1,0 +1,11 @@
+node_modules
+dist
+.github
+.idea
+test
+.env.example
+.gitignore
+.dockerignore
+index.html
+Dockerfile
+README.md

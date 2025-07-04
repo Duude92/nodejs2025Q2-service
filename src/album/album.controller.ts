@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  NotFoundException,
   Post,
   Put,
 } from '@nestjs/common';
@@ -28,7 +29,9 @@ export class AlbumController {
 
   @Get(':id')
   async findOne(@UUIDParam('id') id: string) {
-    return await this.albumService.findOne(id);
+    const album = await this.albumService.findOne(id);
+    if (!album) throw new NotFoundException('Album not found');
+    return album;
   }
 
   @Put(':id')
@@ -42,6 +45,8 @@ export class AlbumController {
   @Delete(':id')
   @HttpCode(204)
   async remove(@UUIDParam('id') id: string) {
+    if (!(await this.albumService.validateEntityExists(id)))
+      throw new NotFoundException('Album not found');
     return await this.albumService.remove(id);
   }
 }

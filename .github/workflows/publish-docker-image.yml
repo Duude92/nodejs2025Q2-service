@@ -1,0 +1,47 @@
+name: Publish docker image
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-22.04
+    name: Build and publish image
+    steps:
+      - name: Extract version from tag
+        id: version
+        run: |
+          fVersion="${{ github.ref_name }}"
+          echo "version=${fVersion:1}" >> $GITHUB_OUTPUT
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Setup .env
+        run: cp ".env.example" ".env"
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            "${{ vars.DOCKERHUB_USERNAME }}/nodejs2025q2-service:${{ steps.version.outputs.version }}"
+            "${{ vars.DOCKERHUB_USERNAME }}/nodejs2025q2-service:latest"

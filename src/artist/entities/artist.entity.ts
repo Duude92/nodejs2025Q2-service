@@ -1,22 +1,30 @@
 import { IsBoolean, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 import { CreateArtistDto } from '../dto/create-artist.dto';
 import { randomUUID } from 'node:crypto';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity()
 export class Artist {
   @IsUUID()
-  readonly id: string; // uuid v4
+  @PrimaryGeneratedColumn('uuid')
+  id: string; // uuid v4
   @IsNotEmpty()
   @IsString()
+  @Column()
   name: string;
   @IsNotEmpty()
   @IsBoolean()
+  @Column()
   grammy: boolean;
-
-  constructor(artistDto: CreateArtistDto) {
-    this.id = randomUUID();
-    this.name = artistDto.name;
-    this.grammy = artistDto.grammy;
-  }
 }
 
-export const createArtist = (data: CreateArtistDto) => new Artist(data);
+const createArtistWithDto = (artistDto: CreateArtistDto) => {
+  const artist = new Artist();
+  artist.id = randomUUID();
+  artist.name = artistDto.name;
+  artist.grammy = artistDto.grammy;
+  return artist;
+};
+
+export const createArtist = (data: CreateArtistDto) =>
+  createArtistWithDto(data);
