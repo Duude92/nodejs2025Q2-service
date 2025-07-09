@@ -11,6 +11,11 @@
 git clone -b dev https://github.com/Duude92/nodejs2025Q2-service.git
 ```
 
+## Setting ENV
+
+Copy .env.example and rename to .env <br>
+You can change .env settings
+
 ## Installing NPM modules
 
 ```

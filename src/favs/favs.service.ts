@@ -10,7 +10,7 @@ import { TrackService } from '../track/track.service';
 import { AlbumService } from '../album/album.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { IEntity } from '../repositories/IEntity';
+import { IEntity } from '../common/repositories/IEntity';
 
 @Injectable()
 export class FavsService {

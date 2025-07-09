@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdatePasswordDto } from './user.entity';
-import { UUIDParam } from '../uuidparam/uuidparam.decorator';
+import { UUIDParam } from '../common/uuidparam/uuidparam.decorator';
 
 @Controller('user')
 @UseInterceptors(ClassSerializerInterceptor)

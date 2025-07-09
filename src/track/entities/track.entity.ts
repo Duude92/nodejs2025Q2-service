@@ -1,4 +1,4 @@
-import { IEntity } from '../../repositories/IEntity';
+import { IEntity } from '../../common/repositories/IEntity';
 import { IsUUID } from 'class-validator';
 import { CreateTrackDto } from '../dto/create-track.dto';
 import { randomUUID } from 'node:crypto';

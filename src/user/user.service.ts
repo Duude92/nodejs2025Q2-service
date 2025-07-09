@@ -7,6 +7,8 @@ import {
 } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { compare, hash } from 'bcrypt';
+import { AUTH } from '../appconfig';
 
 @Injectable()
 export class UserService {
@@ -24,6 +26,10 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
+    createUserDto.password = await hash(
+      createUserDto.password,
+      AUTH.CRYPT_SALT,
+    );
     const user = createUser(createUserDto);
 
     return await this.userRepository.save(user);
@@ -31,9 +37,11 @@ export class UserService {
 
   async updatePassword(id: string, changePassDto: UpdatePasswordDto) {
     const user = await this.validateUserExist(id);
-    if (user.password !== changePassDto.oldPassword)
+    if (!(await compare(changePassDto.oldPassword, user.password)))
+      // if (user.password !== changePassDto.oldPassword)
       throw new HttpException('Passwords does not match', HttpStatus.FORBIDDEN);
-    user.password = changePassDto.newPassword;
+
+    user.password = await hash(changePassDto.newPassword, AUTH.CRYPT_SALT);
     user.version += 1;
     user.updatedAt = Date.now();
 
