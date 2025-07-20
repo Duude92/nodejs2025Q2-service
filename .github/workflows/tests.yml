@@ -1,3 +1,4 @@
+name: Authentication test
 on:
   pull_request:
     branches:
@@ -16,22 +17,24 @@ jobs:
         ports:
           - 5432:5432
 
-    name: test - ${{ matrix.test-command.name}}
+    name: ${{ matrix.test-command.name}}
     strategy:
       fail-fast: false
       matrix:
         node-version: [ 22.x ]
         test-command:
-          - name: users main
-            command: test/users.e2e.spec.ts
-          - name: tracks main
-            command: test/tracks.e2e.spec.ts
-          - name: artists main
-            command: test/artists.e2e.spec.ts
-          - name: albums main
-            command: test/albums.e2e.spec.ts
-          - name: favourites main
-            command: test/favorites.e2e.spec.ts
+          - name: users auth
+            command: auth/users.e2e.spec.ts
+          - name: tracks auth
+            command: auth/tracks.e2e.spec.ts
+          - name: artists auth
+            command: auth/artists.e2e.spec.ts
+          - name: albums auth
+            command: auth/albums.e2e.spec.ts
+          - name: favourites auth
+            command: auth/favorites.e2e.spec.ts
+          - name: refresh token
+            command: refresh/refresh.e2e.spec.ts
     steps:
       - uses: actions/checkout@v4
 
@@ -53,4 +56,4 @@ jobs:
         run: npm start &
 
       - name: Run test ${{ matrix.test-command.name }}
-        run: npm test -- ${{ matrix.test-command.command }}
+        run: npx cross-env TEST_MODE=auth jest --testPathPattern ${{ matrix.test-command.command }}

@@ -1,4 +1,4 @@
-import { Artist, createArtist } from '../artist/entities/artist.entity';
+import { Artist, createArtist } from '../../artist/entities/artist.entity';
 import { Repository } from './repository';
 import { Injectable } from '@nestjs/common';
 

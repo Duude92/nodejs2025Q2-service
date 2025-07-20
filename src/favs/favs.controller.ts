@@ -1,6 +1,6 @@
 import { Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { FavsService } from './favs.service';
-import { UUIDParam } from '../uuidparam/uuidparam.decorator';
+import { UUIDParam } from '../common/uuidparam/uuidparam.decorator';
 import { IFavoritesResponse } from './entities/fav.entity';
 
 @Controller('favs')
